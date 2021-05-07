@@ -1,0 +1,145 @@
+* {
+    font-family: 'Roboto Mono', monospace;
+}
+
+:root {
+    --background: #4d4c4c;
+    --background-light: #696969;
+    --content: #c44d38;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+html, body {
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+}
+
+hr {
+    height: 0px;
+    border: none;
+    border-top: 1px solid black;
+}
+
+.header {
+    height: fit-content;
+}
+
+.header__navigation {
+    display: flex;
+    justify-content: center;
+}
+
+.header__navigation > ul {
+    display: flex;
+    gap: 5rem;
+    list-style: none;
+}
+
+.header__navigation__item > a {
+    font-size: large;
+    font-weight: bold;
+    text-decoration: none!important;
+    color: #000;
+}
+
+.header__navigation__item:hover {
+    text-decoration: underline;
+}
+
+.header__content {
+    display: flex;
+}
+
+.header__content__title {
+    flex: 5;
+}
+
+.container {
+    padding: 1rem;
+}
+
+
+.header__content__additional-data {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-container {
+    display: flex;
+    justify-content: center;
+    flex: 1 0 auto;
+    padding: 2rem;
+}
+
+.rounded {
+    border-radius: 2rem;
+    background-color: var(--background);
+}
+
+.indent {
+    text-indent: 2rem; 
+}
+
+.italic {
+    font-style: italic;
+}
+
+footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    flex-shrink: 0;
+    padding: 1.5rem 5rem;
+    color: white;
+    background-color: var(--content);
+}
+
+/* Books */ 
+
+.books {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.books li {
+    flex: 0 1 10rem;
+    margin: 1rem;
+    padding: 2rem;
+    border: 1px solid white;
+}
+
+.books li:hover {
+    border: 1px solid lightgray;
+}
+
+.book {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: fit-content;
+}
+
+.book img {
+    max-height: 25rem;
+} 
+
+.book-title {
+    line-height: 1.5rem;
+}
+
+.book-title a {
+    text-decoration: none;
+}
+

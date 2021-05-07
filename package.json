@@ -1,0 +1,27 @@
+{
+  "name": "e-commerce-frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "live-server src --verbose",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lprakapovich/e-commerce-frontend.git"
+  },
+  "author": "lprakapovich",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lprakapovich/e-commerce-frontend/issues"
+  },
+  "homepage": "https://github.com/lprakapovich/e-commerce-frontend#readme",
+  "devDependencies": {
+    "eslint-config-prettier": "^8.3.0",
+    "live-server": "^1.2.1"
+  },
+  "dependencies": {
+    "lodash": "^4.17.0"
+  }
+}
