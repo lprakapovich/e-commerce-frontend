@@ -1,6 +1,6 @@
 import data from '../data.js';
 
-const Home = {
+const HomeScreen = {
     render: () => {
         const { books } = data;
         return `
@@ -28,4 +28,4 @@ const Home = {
     }
 }
 
-export default Home;
+export default HomeScreen;
