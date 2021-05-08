@@ -4,24 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "live-server src --verbose",
+    "start": "webpack serve --mode development --watch-content-base --open",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/lprakapovich/e-commerce-frontend.git"
-  },
-  "author": "lprakapovich",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/lprakapovich/e-commerce-frontend/issues"
-  },
-  "homepage": "https://github.com/lprakapovich/e-commerce-frontend#readme",
-  "devDependencies": {
-    "eslint-config-prettier": "^8.3.0",
-    "live-server": "^1.2.1"
-  },
   "dependencies": {
-    "lodash": "^4.17.0"
+    "axios": "^0.21.1"
+  },
+  "devDependencies": {
+    "webpack": "^5.36.2",
+    "webpack-cli": "^4.7.0",
+    "webpack-dev-server": "^3.11.2"
   }
 }

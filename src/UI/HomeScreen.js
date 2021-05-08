@@ -1,11 +1,10 @@
-import data from '../data.js';
-
 const HomeScreen = {
-    render: () => {
-        const { books } = data;
-        return `
+    render: async () => {
+        const response = await axios.get('http://localhost:8000/api/products/books');
+        return response.status !== 200 ? `<div> Couldn't fetch the books </div>` :
+            `
             <ul class="books">
-            ${books.map(book => `
+            ${response.data.map(book => `
             <li>
                 <div class="book">
                    <a href="/#/book/1">
@@ -18,7 +17,7 @@ const HomeScreen = {
                     </a>
                 </div>
                 <div class="book-author">
-                    ${book.id}
+                    ${book.author}
                 </div>
                 <div class="book-price">
                    ${book.price}

@@ -1,6 +1,6 @@
 import HomeScreen from './UI/HomeScreen.js';
 import ProductScreen from "./UI/ProductScreen.js";
-import {parseRequestUrl} from "./util.js";
+import { parseRequestUrl } from "./util.js";
 import ErrorScreen from "./UI/ErrorScreen.js";
 
 const routes = {
@@ -23,5 +23,8 @@ const router = () => {
     const currentScreen = routes[parsedUrl] ? routes[parsedUrl] : ErrorScreen;
 
     const main = document.getElementById('main-container');
-    main.innerHTML = currentScreen.render();
+    console.log(currentScreen.render())
+    currentScreen.render().then(data => {
+        main.innerHTML = data;
+    });
 }
