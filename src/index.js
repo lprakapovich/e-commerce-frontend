@@ -23,8 +23,7 @@ const router = () => {
     const currentScreen = routes[parsedUrl] ? routes[parsedUrl] : ErrorScreen;
 
     const main = document.getElementById('main-container');
-    console.log(currentScreen.render())
-    currentScreen.render().then(data => {
-        main.innerHTML = data;
+    currentScreen.render().then(books => {
+        main.innerHTML = books;
     });
 }

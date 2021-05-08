@@ -1,8 +1,10 @@
 const HomeScreen = {
     render: async () => {
         const response = await axios.get('http://localhost:8000/api/products/books');
-        return response.status !== 200 ? `<div> Couldn't fetch the books </div>` :
-            `
+        if (!response || response.status !== 200) {
+            return `<div> Couldn't fetch the books </div>`;
+        }
+        return `
             <ul class="books">
             ${response.data.map(book => `
             <li>
