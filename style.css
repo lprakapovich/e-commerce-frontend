@@ -143,3 +143,33 @@ footer {
     text-decoration: none;
 }
 
+
+/* Product details screen */
+
+.product-view {
+    display: flex;
+    width: 100%;
+}
+
+.product-view .product-details {
+    margin: 2rem;
+    width: 100%;
+}
+
+.product-view .product-details .image a {
+    /*flex: 1;*/
+    display: flex;
+    justify-items: center;
+    justify-self: center;
+    justify-content: center;
+}
+
+.product-view .product-details .data {
+    /*flex: 1;*/
+}
+
+.submit-button {
+    padding: 0.5rem;
+    font-size: 1rem;
+    width: 15rem;
+}

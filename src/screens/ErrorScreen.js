@@ -1,5 +1,5 @@
 const ErrorScreen = {
-    render: () => {
+    render: async () => {
         return `<div> 404 not found </div>`
     }
 }

@@ -9,7 +9,7 @@ const HomeScreen = {
             ${response.data.map(book => `
             <li>
                 <div class="book">
-                   <a href="/#/book/1">
+                   <a href="/#/product/${book.id}">
                         <img src="/images/sample.jpg" alt="book">
                     </a> 
                 </div>

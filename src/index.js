@@ -17,15 +17,15 @@ window.onload = () => {
 const router = () => {
     const request = parseRequestUrl();
     const parsedUrl = (request.resource ? `/${request.resource}` : '/') +
-        (request.id ? `/${request.id}` : '') +
+        (request.id ? "/:id" : '') +
         (request.action ? `/${request.action}` : '');
 
     const currentScreen = routes[parsedUrl] ? routes[parsedUrl] : ErrorScreen;
 
     const main = document.getElementById('main-container');
 
-    currentScreen.render().then(books => {
-        console.log(books)
-        main.innerHTML = books;
+    currentScreen.render().then(content => {
+        main.innerHTML = content;
+        currentScreen.after_render();
     });
 }
