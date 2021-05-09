@@ -2,11 +2,14 @@ import HomeScreen from './screens/HomeScreen.js';
 import ProductScreen from "./screens/ProductScreen.js";
 import { parseRequestUrl } from "./util.js";
 import ErrorScreen from "./screens/ErrorScreen.js";
+import CartScreen from "./screens/CartScreen";
 
 const routes = {
     '/' : HomeScreen,
     '/books' : HomeScreen,
-    '/product/:id': ProductScreen
+    '/product/:id': ProductScreen,
+    '/cart/:id': CartScreen,
+    '/cart' : CartScreen
 }
 
 window.onload = () => {

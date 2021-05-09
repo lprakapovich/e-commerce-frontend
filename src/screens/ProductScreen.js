@@ -4,11 +4,9 @@ import {getProduct} from "../api";
 const ProductScreen = {
     after_render: () => {
         const request = parseRequestUrl();
-        console.log(request)
-        document.getElementById("add-button").addEventListener('click',
-            () => {
+        document.getElementById("add-button").addEventListener('click', () => {
             document.location.hash = `/cart/${request.id}`;
-            })
+        })
     },
     render: async () => {
         const request = parseRequestUrl();
@@ -16,6 +14,8 @@ const ProductScreen = {
         if (!response || response.status !== 200) {
             return `<div> ${response.data.message} </div>`;
         }
+
+        const product = response.data;
 
         return `
                <div class="product-view">
@@ -25,14 +25,14 @@ const ProductScreen = {
                     <div class="product-details data">
                         <div>
                             <a href="/#/book/1">
-                                Harry Potter
+                                ${product.name}
                             </a>
                         </div>
                    <div class="book-author">
-                       Joanne Rowling
+                       ${product.author} 
                    </div>
                    <div class="book-price">
-                       14$
+                      ${product.price}
                    </div>
                   <button id="add-button" type="submit"> Add to cart </button>
                </div>

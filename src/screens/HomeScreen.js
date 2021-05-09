@@ -1,4 +1,5 @@
 const HomeScreen = {
+    after_render: () => { },
     render: async () => {
         const response = await axios.get('http://localhost:8000/api/products/books');
         if (!response || response.status !== 200) {
