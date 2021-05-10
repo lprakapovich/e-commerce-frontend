@@ -3,13 +3,17 @@ import ProductScreen from "./screens/ProductScreen.js";
 import { parseRequestUrl } from "./util.js";
 import ErrorScreen from "./screens/ErrorScreen.js";
 import CartScreen from "./screens/CartScreen";
+import SignInScreen from "./screens/SignInScreen";
+import SignUpScreen from "./screens/SignUpScreen";
 
 const routes = {
     '/' : HomeScreen,
     '/books' : HomeScreen,
     '/product/:id': ProductScreen,
     '/cart/:id': CartScreen,
-    '/cart' : CartScreen
+    '/cart' : CartScreen,
+    '/sign-in': SignInScreen,
+    '/sign-up': SignUpScreen
 }
 
 window.onload = () => {
@@ -23,9 +27,10 @@ const router = () => {
         (request.id ? "/:id" : '') +
         (request.action ? `/${request.action}` : '');
 
+    console.log(parsedUrl)
     const currentScreen = routes[parsedUrl] ? routes[parsedUrl] : ErrorScreen;
 
-    const main = document.getElementById('main-container');
+    let main = parsedUrl === '/sign-in' || parsedUrl === '/sign-up' ? document.body : document.getElementById('main-container');
 
     currentScreen.render().then(content => {
         main.innerHTML = content;
