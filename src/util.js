@@ -7,3 +7,9 @@ export const parseRequestUrl = () => {
         action: request[3]
     }
 }
+
+// TODO fix resetting local storage cartItems
+export const rerender = async (component) => {
+     // document.getElementById("main-container").innerHTML = await component.render();
+     // await component.after_render();
+}

@@ -6,5 +6,5 @@ export const getCartItems = () => {
 // cart items is a js object, but local storage requires a string format
 export const updateCartItems = (cartItems) => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    console.log('local storage size', getCartItems().length);
+    const ls = localStorage.getItem('cartItems');
 }

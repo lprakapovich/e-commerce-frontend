@@ -14,9 +14,7 @@ const ProductScreen = {
         if (!response || response.status !== 200) {
             return `<div> ${response.data.message} </div>`;
         }
-
         const product = response.data;
-
         return `
                <div class="product-view">
                     <div class="product-details image">
