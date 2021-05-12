@@ -1,7 +1,24 @@
+import {register} from "../api";
+
+const validateForm = () => {
+    // TODO
+}
+
 const SignUpScreen = {
     after_render: () => {
         document.getElementById('sign-in-redirect').addEventListener('click', () => {
             location.hash = '/sign-in';
+        })
+        document.getElementById('sign-up-form').addEventListener('submit', () => {
+            validateForm();
+            console.log('regisrering')
+            const response = register(
+                {
+                    username: document.getElementById('username').value,
+                    email: document.getElementById('email').value,
+                    password: document.getElementById('password').value,
+                }
+            )
         })
     },
     render: async () => {
@@ -12,9 +29,9 @@ const SignUpScreen = {
                     <div class="header">
                         <h2> Create an account </h2>
                     </div>
-                    <form class="form" id="form">
+                    <form class="form" id="sign-up-form"">
                     <div class="form-control">
-                        <label for="username">
+                        <label>
                             Username
                         </label>
                         <input type="text" placeholder="Username" id="username">
@@ -35,7 +52,7 @@ const SignUpScreen = {
                         <label for="password">
                             Password
                         </label>
-                        <input type="text" placeholder="Password" id="password">
+                        <input type="password" placeholder="Password" id="password">
                         <i class="fa fa-check-circle"></i>
                         <i class="fa fa-exclamation-circle"></i>
                         <small>Error message</small>

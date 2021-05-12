@@ -5,6 +5,8 @@ import ErrorScreen from "./screens/ErrorScreen.js";
 import CartScreen from "./screens/CartScreen";
 import SignInScreen from "./screens/SignInScreen";
 import SignUpScreen from "./screens/SignUpScreen";
+import Header from "./screens/Header";
+import UserProfileScreen from "./screens/UserProfileScreen";
 
 const routes = {
     '/' : HomeScreen,
@@ -13,33 +15,47 @@ const routes = {
     '/cart/:id': CartScreen,
     '/cart' : CartScreen,
     '/sign-in': SignInScreen,
-    '/sign-up': SignUpScreen
+    '/sign-up': SignUpScreen,
+    '/user-profile': UserProfileScreen
 }
 
-window.onload = () => {
-    router();
+window.onload = async () => {
+    await router();
     window.addEventListener('hashchange', () => {
-        console.log('hash changed')
         router();
     });
 }
 
-const router = () => {
-    const request = parseRequestUrl();
-    const parsedUrl = (request.resource ? `/${request.resource}` : '/') +
-        (request.id ? "/:id" : '') +
-        (request.action ? `/${request.action}` : '');
+const redirectNotAuthenticated = (currentScreen) => {
+    if (!localStorage.getItem('userInfo') && currentScreen !== '/sign-up') {
+        location.hash = "/sign-in";
+    }
+}
 
-    const currentScreen = routes[parsedUrl] ? routes[parsedUrl] : ErrorScreen;
+const getParsedUrl = () => {
+    const request = parseRequestUrl();
+    return (request.resource ? `/${request.resource}` : '/') + (request.id ? "/:id" : '') + (request.action ? `/${request.action}` : '');
+}
+
+const router = async () => {
+    const parsedUrl = getParsedUrl();
+    redirectNotAuthenticated(parsedUrl);
+
+    const screen = routes[parsedUrl] ? routes[parsedUrl] : ErrorScreen;
+
     Array.from(document.getElementsByClassName('hide')).forEach(
         element => {
             element.hidden = (parsedUrl === '/sign-in' || parsedUrl === '/sign-up');
         }
     )
 
-    let main = document.getElementById('main-container');
-    currentScreen.render().then(content => {
+    const header = document.getElementById('header-navigation-wrapper');
+    header.innerHTML = await Header.render();
+    await Header.after_render();
+
+    const main = document.getElementById('main-container');
+    screen.render().then(content => {
         main.innerHTML = content;
-        currentScreen.after_render();
+        screen.after_render();
     });
 }

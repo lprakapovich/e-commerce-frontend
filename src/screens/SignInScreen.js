@@ -1,4 +1,4 @@
-import {sign_in} from "../api";
+import {login} from "../api";
 import {getUserInfo, setUserInfo} from "../localStorage";
 
 const SignInScreen = {
@@ -8,7 +8,7 @@ const SignInScreen = {
                 e.preventDefault();
                 const email = document.getElementById('email').value;
                 const password = document.getElementById('password').value;
-                const data = await sign_in({email, password});
+                const data = await login({email, password});
                 if (data.error) {
                     alert(data.error)
                 } else {
@@ -47,7 +47,7 @@ const SignInScreen = {
                         <label for="password">
                             Password
                         </label>
-                    <input type="text" placeholder="Password" id="password">
+                    <input type="password" placeholder="Password" id="password">
                     <i class="fa fa-check-circle"></i>
                     <i class="fa fa-exclamation-circle"></i>
                     <small>Error message</small>

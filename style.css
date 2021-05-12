@@ -57,26 +57,35 @@ hr {
 }
 
 .header__content__title {
-    flex: 5;
+    flex: 10;
 }
 
 .container {
     padding: 1rem;
 }
 
-
 .header__content__additional-data {
     flex: 1;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-self: center;
     font-size: 1.5rem;
 }
 
-.header__content__additional-data a {
+.icon a {
     text-decoration: none;
     color: black;
+}
+
+.icon {
+    font-size: 2rem;
+    display: flex;
+    align-self: center;
+    margin: 0 2rem;
+}
+
+.icon:hover {
+    cursor: pointer;
 }
 
 .main-container {
@@ -231,7 +240,6 @@ footer {
 
 .form-wrapper {
     width: 100%;
-    /*height: 100vh;*/
     display: flex;
     justify-content: center;
     align-items: center;
@@ -359,4 +367,13 @@ footer {
 
 #sign-up-redirect, #sign-in-redirect:hover {
     cursor: pointer;
+}
+
+/* User profile */
+
+.user-profile-wrapper {
+    height: fit-content;
+    border: 1px solid black;
+    border-radius: 1rem;
+    margin: 2rem 0;
 }

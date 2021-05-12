@@ -22,3 +22,7 @@ export const getUserInfo = () => {
     const userInfo = localStorage.getItem('userInfo');
     return userInfo ? JSON.parse(userInfo) : { name: '', email: '', password: ''}
 }
+
+export const isAdmin = () => {
+    return getUserInfo() && getUserInfo().role === 'Admin';
+}
