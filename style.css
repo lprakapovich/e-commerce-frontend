@@ -83,7 +83,6 @@ hr {
     display: flex;
     justify-content: center;
     flex: 1 0 auto;
-    padding: 2rem;
 }
 
 .rounded {
@@ -232,11 +231,11 @@ footer {
 
 .form-wrapper {
     width: 100%;
-    height: 100vh;
+    /*height: 100vh;*/
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #be8d80;
+    background-color: #bfbfbf;
 }
 
 .form-container {
@@ -327,7 +326,7 @@ footer {
 }
 
 .form button {
-    background-color: #c44d38;
+    background-color: var(--content);
     /* same as with inputs */
     display: block;
     color: white;

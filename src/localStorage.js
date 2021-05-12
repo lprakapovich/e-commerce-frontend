@@ -3,8 +3,22 @@ export const getCartItems = () => {
     return storageCartItems ? JSON.parse(storageCartItems) : [];
 }
 
-// cart items is a js object, but local storage requires a string format
 export const updateCartItems = (cartItems) => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    const ls = localStorage.getItem('cartItems');
+}
+
+export const setUserInfo =
+    ({
+        id = '',
+        name = '',
+        email = '',
+        password = '',
+        role = ''
+     }) => {
+    localStorage.setItem('userInfo', JSON.stringify({id, name, email, password, role}))
+}
+
+export const getUserInfo = () => {
+    const userInfo = localStorage.getItem('userInfo');
+    return userInfo ? JSON.parse(userInfo) : { name: '', email: '', password: ''}
 }

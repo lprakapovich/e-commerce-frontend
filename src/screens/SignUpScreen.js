@@ -5,11 +5,12 @@ const SignUpScreen = {
         })
     },
     render: async () => {
+        document.getElementById('header__navigation').hidden = true;
         return `
             <div class="form-wrapper">
                 <div class="form-container">
                     <div class="header">
-                        <h2> Create account </h2>
+                        <h2> Create an account </h2>
                     </div>
                     <form class="form" id="form">
                     <div class="form-control">

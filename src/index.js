@@ -18,7 +18,10 @@ const routes = {
 
 window.onload = () => {
     router();
-    window.addEventListener('hashchange', router);
+    window.addEventListener('hashchange', () => {
+        console.log('hash changed')
+        router();
+    });
 }
 
 const router = () => {
@@ -27,11 +30,14 @@ const router = () => {
         (request.id ? "/:id" : '') +
         (request.action ? `/${request.action}` : '');
 
-    console.log(parsedUrl)
     const currentScreen = routes[parsedUrl] ? routes[parsedUrl] : ErrorScreen;
+    Array.from(document.getElementsByClassName('hide')).forEach(
+        element => {
+            element.hidden = (parsedUrl === '/sign-in' || parsedUrl === '/sign-up');
+        }
+    )
 
-    let main = parsedUrl === '/sign-in' || parsedUrl === '/sign-up' ? document.body : document.getElementById('main-container');
-
+    let main = document.getElementById('main-container');
     currentScreen.render().then(content => {
         main.innerHTML = content;
         currentScreen.after_render();

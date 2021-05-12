@@ -1,4 +1,4 @@
-import {parseRequestUrl, rerender} from "../util.js";
+import {parseRequestUrl} from "../util.js";
 import {getProduct} from "../api.js";
 import {getCartItems, updateCartItems} from "../localStorage.js";
 
