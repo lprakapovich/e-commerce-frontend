@@ -20,9 +20,13 @@ export const setUserInfo =
 
 export const getUserInfo = () => {
     const userInfo = localStorage.getItem('userInfo');
-    return userInfo ? JSON.parse(userInfo) : { name: '', email: '', password: ''}
+    return userInfo ? JSON.parse(userInfo) : null;
 }
 
 export const isAdmin = () => {
     return getUserInfo() && getUserInfo().role === 'Admin';
+}
+
+export const clearUserInfo = () => {
+    localStorage.removeItem('userInfo');
 }

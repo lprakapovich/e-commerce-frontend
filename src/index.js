@@ -7,6 +7,7 @@ import SignInScreen from "./screens/SignInScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import Header from "./screens/Header";
 import UserProfileScreen from "./screens/UserProfileScreen";
+import AdminScreen from "./screens/AdminScreen";
 
 const routes = {
     '/' : HomeScreen,
@@ -16,18 +17,21 @@ const routes = {
     '/cart' : CartScreen,
     '/sign-in': SignInScreen,
     '/sign-up': SignUpScreen,
-    '/user-profile': UserProfileScreen
+    '/user-profile': UserProfileScreen,
+    '/admin': AdminScreen
 }
 
 window.onload = async () => {
     await router();
     window.addEventListener('hashchange', () => {
+        console.log('hash changed')
         router();
+
     });
 }
 
 const redirectNotAuthenticated = (currentScreen) => {
-    if (!localStorage.getItem('userInfo') && currentScreen !== '/sign-up') {
+    if (!localStorage.getItem('userInfo') && currentScreen !== '/sign-up' && currentScreen !== '/') {
         location.hash = "/sign-in";
     }
 }

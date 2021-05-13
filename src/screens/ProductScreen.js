@@ -29,6 +29,9 @@ const ProductScreen = {
                    <div class="book-author">
                        ${product.author} 
                    </div>
+                    <div class="book-availability">
+                       ${product.availableQuantity} 
+                   </div>
                    <div class="book-price">
                       ${product.price}
                    </div>

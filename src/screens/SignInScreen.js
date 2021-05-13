@@ -23,7 +23,7 @@ const SignInScreen = {
     },
     render: async () => {
 
-        if (getUserInfo().name) {
+        if (getUserInfo()) {
             document.location.hash = '/';
         }
 
