@@ -534,6 +534,49 @@ input[type="range"]::-ms-thumb {
     cursor: pointer;
 }
 
+
+/* Admin */
+
+#admin-container {
+    display: flex;
+    width: 100%;
+}
+
+#admin-navigation-menu {
+    flex: 1;
+}
+
+#admin-navigation-content {
+    flex: 5;
+}
+
+#admin-navigation-menu {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    background-color: seashell;
+}
+
+#admin-navigation-menu div {
+    padding: 1rem;
+}
+
+#admin-navigation-menu div:hover{
+    background-color: #ffe2c9;
+}
+
+#admin-navigation-menu .active {
+    background-color: #ffe2c9;
+}
+
+.admin-navigation-item a {
+    text-decoration: none;
+    color: black;
+}
+
+
+
+
 /* Unused */
 
 /*.header__navigation {*/
