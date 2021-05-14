@@ -4,7 +4,7 @@ import {getProduct} from "../api";
 const ProductScreen = {
     after_render: () => {
         const request = parseRequestUrl();
-        document.getElementById("add-button").addEventListener('click', () => {
+        document.getElementById("add-to-cart-button").addEventListener('click', () => {
             document.location.hash = `/cart/${request.id}`;
         })
     },
@@ -35,7 +35,7 @@ const ProductScreen = {
                    <div class="book-price">
                       ${product.price}
                    </div>
-                  <button id="add-button" type="submit"> Add to cart </button>
+                  <button id="add-to-cart-button" type="submit"> Add to cart </button>
                </div>
            </div> `
     }

@@ -8,7 +8,6 @@ import SignUpScreen from "./screens/SignUpScreen";
 import Header from "./components/Header";
 import UserProfileScreen from "./screens/UserProfileScreen";
 import AdminScreen from "./screens/AdminScreen";
-import Slider from "./components/Slider";
 
 const routes = {
     '/' : HomeScreen,

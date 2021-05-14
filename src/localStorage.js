@@ -39,3 +39,4 @@ export const clearUserInfo = () => {
 export const isAdmin = () => {
     return getUserInfo() && getUserInfo().role === 'Admin';
 }
+

@@ -223,31 +223,32 @@ footer {
 
 /* Cart */
 
-.cart {
+.cart-container {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
 }
 
-.cart-list {
+.cart-product-list {
     flex: 4;
     width: 100%;
 }
 
-.cart-subtotal {
+.cart-total {
     flex: 1;
+    background-color: #c44d38;
 }
 
-.cart-item-container, .cart-list-header {
+.cart-item-container, .cart-container-header {
     display: flex;
     width: 100%;
 }
 
-.cart-list-header h3 {
+.cart-container-header h3 {
     flex: 4;
 }
 
-.cart-list-header h3:last-child {
+.cart-container-header h3:last-child {
     display: flex;
     flex: 1;
     justify-content: center;
