@@ -54,12 +54,11 @@ const router = async () => {
         }
     )
 
-    const header = document.getElementById('header-navigation-wrapper');
+    const header = document.getElementById('header-wrapper');
     header.innerHTML = await Header.render();
     await Header.after_render();
 
-
-    const main = document.getElementById('main-container');
+    const main = document.getElementById('main-wrapper');
     screen.render().then(content => {
         main.innerHTML = content;
         screen.after_render();

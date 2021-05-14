@@ -5,6 +5,11 @@ export const getProduct = async (id, type) => {
     return await axios.get(API_URL + '/products/' + type + `/${id}`);
 }
 
+export const getProducts = async (type, filters) => {
+    console.log(filters)
+    return await axios.get(API_URL + '/products/' + type, {data: {}, params: filters});
+}
+
 export const login = async ({email, password}) => {
     try {
         const response = await axios.post(

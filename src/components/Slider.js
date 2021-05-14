@@ -2,11 +2,12 @@ const Slider = {
     render: (min, max) => {
         return `
             <div class="range-slider">
+            Price 
                <span>
                     <strong> From: </strong>
-                    <input  type="number" value="${min}" min="${min}" max="${max}" step="0.1"> $
+                    <input  type="number" value="${min}" min="${min}" max="${max}" step="0.1"> 
                     <strong> To: </strong>
-                    <input type="number" value="${max}" min="${min}" max="${max}" step="0.1"> $
+                    <input type="number" value="${max}" min="${min}" max="${max}" step="0.1">  $
                 </span>
                 <input value="${min}" min="${min}" max="${max}" step="0.1" type="range">
                 <input value="${max}" min="${min}" max="${max}" step="0.1" type="range">
@@ -28,6 +29,9 @@ const Slider = {
                 }
                 values[0].value = min;
                 values[1].value = max;
+
+                localStorage.setItem('priceMin', JSON.stringify(min));
+                localStorage.setItem('priceMax', JSON.stringify(max));
             }
         })
 
@@ -44,6 +48,9 @@ const Slider = {
 
                 ranges[0].value = min;
                 ranges[1].value = max;
+
+                localStorage.setItem('priceMin', JSON.stringify(min));
+                localStorage.setItem('priceMax', JSON.stringify(max));
             }
         })
     }

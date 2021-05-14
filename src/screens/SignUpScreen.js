@@ -1,7 +1,7 @@
 import {register} from "../api";
 
+// TODO
 const validateForm = () => {
-    // TODO
 }
 
 const SignUpScreen = {
@@ -11,7 +11,6 @@ const SignUpScreen = {
         })
         document.getElementById('sign-up-form').addEventListener('submit', () => {
             validateForm();
-            console.log('regisrering')
             const response = register(
                 {
                     username: document.getElementById('username').value,
@@ -22,7 +21,6 @@ const SignUpScreen = {
         })
     },
     render: async () => {
-        document.getElementById('header__navigation').hidden = true;
         return `
             <div class="form-wrapper">
                 <div class="form-container">

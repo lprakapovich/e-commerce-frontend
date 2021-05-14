@@ -1,9 +1,9 @@
-export const getProducts = (suffix) => {
+export const getStorageProducts = () => {
     const products = localStorage.getItem('products');
     return products ? JSON.parse(products) : [];
 }
 
-export const setProducts = (products) => {
+export const setStorageProducts = (products) => {
     localStorage.setItem('products', JSON.stringify(products));
 }
 

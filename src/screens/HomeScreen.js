@@ -1,5 +1,6 @@
 import Slider from "../components/Slider";
-import {getProducts, setProducts} from "../localStorage";
+import {getStorageProducts, setStorageProducts} from "../localStorage";
+import {getProducts} from "../api";
 
 const setProductPriceRanges = (products) => {
     let priceMax = 0, priceMin = 0;
@@ -9,7 +10,6 @@ const setProductPriceRanges = (products) => {
                 priceMax = product.price;
             }
         })
-
         priceMin = priceMax;
         products.forEach(product => {
             if (product.price < priceMin) {
@@ -20,43 +20,9 @@ const setProductPriceRanges = (products) => {
     }
 }
 
-const HomeScreen = {
-    after_render: () => {
-        const products = getProducts();
-        let { priceMin, priceMax} = setProductPriceRanges(products)
-
-        document.getElementById('slider').innerHTML= Slider.render(priceMin, priceMax);
-        Slider.after_render();
-    },
-
-    render: async () => {
-        const response = await axios.get('http://localhost:8000/api/products/books');
-        if (!response || response.status !== 200) {
-            return `<div> Couldn't fetch the books </div>`;
-        } else {
-            setProducts(response.data);
-            return `
-            <div class="product-list-container">
-                <form class="filters">
-                    <div class="form-control">
-                        <div>
-                            <label>
-                                Title
-                            </label>
-                            <input type="text" placeholder="e.g. Harry Potter" id="title">        
-                        </div>
-                        <div>
-                            <label>
-                                Author
-                            </label>
-                            <input type="text" placeholder="e.g. Joanne Rowling" id="author">        
-                        </div>
-                        <div id="slider"></div></div>
-                        <input type="submit">
-                    </div>
-                </form>
-                <ul class="books">
-                    ${response.data.map(book => `
+const fetchProducts = (products) => {
+    return ` <ul id="books-container">
+                    ${products.map(book => `
                         <li>
                             <div class="book">
                                 <a href="/#/product/${book.id}">
@@ -75,7 +41,71 @@ const HomeScreen = {
                                 Price: ${book.price}$
                             </div>
                         </li>`)
-                .join('\n')} 
+        .join('\n')} `
+}
+
+const getParams = () => {
+    const minPrice = localStorage.getItem('minPrice'),
+        maxPrice = localStorage.getItem('maxPrice'),
+        author = document.getElementById('author').value,
+        name = document.getElementById('name').value;
+
+    return {
+        ...(minPrice) && { 'price[gte]' : minPrice },
+        ...(maxPrice) && { 'price[lge]' : maxPrice },
+        ...(author) && { 'author' : author },
+        ...(name) && { 'name' : name },
+    }
+}
+
+const HomeScreen = {
+    after_render: () => {
+        const products = getStorageProducts();
+        let { priceMin, priceMax} = setProductPriceRanges(products)
+
+        document.getElementById('slider').innerHTML= Slider.render(priceMin, priceMax);
+        Slider.after_render();
+
+        document.getElementById('products-filter-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            getProducts('books', getParams())
+                .then(response => {
+                    console.log(response)
+                document.getElementById('books-container').innerHTML = fetchProducts(response.data);
+            })
+        })
+    },
+
+    render: async () => {
+        const {data, status} = await getProducts('books');
+        if (!status || status !== 200) {
+            return `<div> Couldn't fetch the books </div>`;
+        } else {
+            setStorageProducts(data);
+            return `
+            <div class="products-container">
+                <form id="products-filter-form">
+                    <div class="form-control">
+                        <div>
+                            <label>
+                                Title
+                            </label>
+                            <input type="text" placeholder="e.g. Harry Potter" id="name" class="large-input">        
+                        </div>
+                        <div>
+                            <label>
+                                Author
+                            </label>
+                            <input type="text" placeholder="e.g. Joanne Rowling" id="author" class="large-input">        
+                        </div>
+                        <div id="slider"></div>
+                        </div>
+                        <button type="submit"> Find </button>
+                    </div>
+                </form>
+               <div id="products-list">
+                    ${fetchProducts(data)}
+               </div>
             </div>
         `
         }
