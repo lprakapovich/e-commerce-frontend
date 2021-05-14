@@ -52,3 +52,33 @@ export const createOrder = async (order) => {
        return { error: err.response.data.message || err.message }
    }
 }
+
+export const getOrders = async () => {
+    try {
+        const response = await axios.get(API_URL + "/orders", {
+            auth: {
+                username: 'user',
+                password: 'user'
+            }});
+        return response.data;
+    } catch (err) {
+        return { error: err.response.data.message || err.message }
+    }
+}
+
+export const getOrderById = async (id) => {
+    try {
+        const response = await axios.get(API_URL + "/orders", {
+            auth: {
+                username: 'user',
+                password: 'user'
+            },
+            params: {
+                id
+            }
+        })
+        return response.data;
+    } catch (err) {
+        return {error: err.response.message || err.message }
+    }
+}

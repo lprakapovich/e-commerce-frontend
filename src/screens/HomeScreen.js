@@ -70,7 +70,6 @@ const HomeScreen = {
             e.preventDefault();
             getProducts('books', getParams())
                 .then(response => {
-                    console.log(response)
                 document.getElementById('books-container').innerHTML = fetchProducts(response.data);
             })
         })
