@@ -1,6 +1,6 @@
 import {parseRequestUrl} from "../util.js";
 import {getProduct} from "../api.js";
-import {getCartItems, updateCartItems} from "../localStorage.js";
+import {getCartItems, setCartItems} from "../localStorage.js";
 
 const addProductToCart = (item, forceUpdate = false) => {
     let cartItems = getCartItems();
@@ -12,12 +12,12 @@ const addProductToCart = (item, forceUpdate = false) => {
                  i.orderedQuantity = item.orderedQuantity;
              }
          })
-         // cartItems.map(i => i.productId === item.productId ? item : i);
         }
     } else {
         cartItems = [...cartItems, item];
     }
-    updateCartItems(cartItems);
+
+    setCartItems(cartItems);
     if (forceUpdate) {
         location.reload();
         // rerender(CartScreen).then(() => {});
@@ -25,7 +25,7 @@ const addProductToCart = (item, forceUpdate = false) => {
 }
 
 const removeFromCart = (id) => {
-    updateCartItems(getCartItems().filter(i => i.productId !== id));
+    setCartItems(getCartItems().filter(i => i.productId !== id));
     if (id === parseRequestUrl().id) {
      document.location.hash = "/cart";
     } else {

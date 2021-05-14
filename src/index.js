@@ -5,9 +5,10 @@ import ErrorScreen from "./screens/ErrorScreen.js";
 import CartScreen from "./screens/CartScreen";
 import SignInScreen from "./screens/SignInScreen";
 import SignUpScreen from "./screens/SignUpScreen";
-import Header from "./screens/Header";
+import Header from "./components/Header";
 import UserProfileScreen from "./screens/UserProfileScreen";
 import AdminScreen from "./screens/AdminScreen";
+import Slider from "./components/Slider";
 
 const routes = {
     '/' : HomeScreen,
@@ -56,6 +57,7 @@ const router = async () => {
     const header = document.getElementById('header-navigation-wrapper');
     header.innerHTML = await Header.render();
     await Header.after_render();
+
 
     const main = document.getElementById('main-container');
     screen.render().then(content => {
