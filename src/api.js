@@ -36,7 +36,26 @@ export const createProduct = async ({ name, author, price, availableQuantity, ty
 }
 
 export const getProduct = async (id, type) => {
-    return await axios.get(API_URL + '/products/' + type + `/${id}`);
+    try {
+        const response = await axios.get(API_URL + '/products/' + type + `/${id}`, {
+            auth: {
+                username: 'admin',
+                password: 'password'
+            }});
+        return response.data;
+    } catch (err) {
+        return { error: err.response.data.message || err.message }
+    }
+}
+
+export const updateProduct = async ({id, name, author, price, availableQuantity, type}) => {
+    try {
+        const response = await axios.put(API_URL + '/products/books',
+            { id, name, author, price, availableQuantity, type });
+        return response.data;
+    } catch (err) {
+        return { error: err.response.data.message || err.message }
+    }
 }
 
 export const getProducts = async (type, filters) => {

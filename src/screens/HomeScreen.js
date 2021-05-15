@@ -49,7 +49,6 @@ const getParams = () => {
         maxPrice = localStorage.getItem('maxPrice'),
         author = document.getElementById('author').value,
         name = document.getElementById('name').value;
-
     return {
         ...(minPrice) && { 'price[gte]' : minPrice },
         ...(maxPrice) && { 'price[lge]' : maxPrice },
@@ -77,7 +76,6 @@ const HomeScreen = {
 
     render: async () => {
         const response = await getProducts('books');
-        console.log(response)
         if (response.error) {
             return `<div> Couldn't fetch the books </div>`;
         }

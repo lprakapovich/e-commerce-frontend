@@ -1,8 +1,8 @@
 import {getUserInfo} from "../localStorage";
-import {createProduct, getOrderById, getOrders, getProducts, login} from "../api";
+import {createProduct, getOrderById, getOrders, getProduct, getProducts, login, updateProduct} from "../api";
 import {calculateOrderTotal} from "../util";
 import OrderModal from "../components/OrderModal";
-import NewProductModal from "../components/NewProductModal";
+import ProductModal from "../components/NewProductModal";
 
 const preventNonAdminAccess = () => {
     const {role} = getUserInfo();
@@ -41,7 +41,6 @@ const getAdminProductsView = async () => {
             <div class="">
                 <button id="add-new-button"> Add new product <i class="fa fa-plus"></i> </button> 
             </div>
-                      
                 ${products.map(product =>        
                  `<div class="product-item">
                         <div class="product-details">
@@ -94,38 +93,65 @@ const loadComponent = (componentId) => {
 
         if (componentId === 'admin-products') {
             document.querySelector('#add-new-button').onclick = function() {
-                modal.innerHTML = NewProductModal.render();
+                modal.innerHTML = ProductModal.render();
                 modal.style.display = 'block';
                 modal.querySelector('#close-modal').onclick = function() {
                     modal.style.display = 'none';
                 }
                 modal.querySelector('#new-product-form').onsubmit = async function (e) {
+                    // create new product
                     e.preventDefault();
                     modal.style.display = 'none';
-
-                    const name = modal.querySelector('#title').value;
-                    const author = modal.querySelector('#author').value;
-                    const price = modal.querySelector('#price').value;
-                    const availableQuantity = modal.querySelector('#availableQuantity').value;
-
                     const response = await createProduct({
-                        name, author, price, availableQuantity, type: 'book'
+                        name : modal.querySelector('#title').value,
+                        author: modal.querySelector('#author').value,
+                        price: modal.querySelector('#price').value,
+                        availableQuantity: modal.querySelector('#availableQuantity').value,
+                        type: 'book'
                     })
-
-                    console.log(response)
                     alert(response.error ?
                         response.error : `A new product was registered at the stock under id ${response}`)
                 }
             };
+
+            Array.from(document.querySelectorAll('.edit-button')).forEach(button => {
+                button.onclick = async function () {
+                    const product = await getProduct(button.id, 'books');
+                    modal.innerHTML = ProductModal.render(product);
+                    modal.style.display = 'block';
+                    modal.querySelector('#close-modal').onclick = function() {
+                        modal.style.display = 'none';
+                    }
+                    modal.querySelector('#modal-header').innerText = 'Edit an existing product';
+                    modal.querySelector('#new-product-form').onsubmit = async function (e) {
+                        // modify product
+                        e.preventDefault();
+                        modal.style.display = 'none';
+                        const response = await updateProduct({
+                            id: product.id,
+                            name : modal.querySelector('#title').value,
+                            author: modal.querySelector('#author').value,
+                            price: modal.querySelector('#price').value,
+                            availableQuantity: modal.querySelector('#availableQuantity').value,
+                            type: 'book'
+                        })
+
+                        if (response.error) {
+                            alert(response.error);
+                        } else {
+                            alert(`Successfully updated a product ${response.id}`);
+                            loadComponent('admin-products');
+                        }
+                    }
+                }
+            })
         }
     })
 }
 
-
 // TODO pass rendered content and a callback function
 const initializeModal = (component, callback) => {
 }
-
 
 const AdminScreen = {
     render: async () => {
@@ -141,9 +167,7 @@ const AdminScreen = {
                 </div>`
     },
     after_render: () => {
-
         preventNonAdminAccess();
-
         loadComponent('admin-orders');
         const menuItems = document.getElementsByClassName('admin-navigation-item');
         Array.from(menuItems).forEach(item => {
