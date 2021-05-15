@@ -1,5 +1,5 @@
 import {getUserInfo} from "../localStorage";
-import {getOrderById, getOrders, getProducts, login} from "../api";
+import {createProduct, getOrderById, getOrders, getProducts, login} from "../api";
 import {calculateOrderTotal} from "../util";
 import OrderModal from "../components/OrderModal";
 import NewProductModal from "../components/NewProductModal";
@@ -78,6 +78,7 @@ const loadContent = async (selectedMenuItemId) => {
 const loadComponent = (componentId) => {
     loadContent(componentId).then(renderedComponent => {
         document.querySelector('#admin-navigation-content').innerHTML = renderedComponent;
+
         const modal = document.querySelector('#admin-modal');
 
         Array.from(document.querySelectorAll('.order-details-button')).forEach(button => {
@@ -91,15 +92,35 @@ const loadComponent = (componentId) => {
             }
         })
 
-        document.getElementById('add-new-button')?.addEventListener('click', () => {
-            modal.innerHTML = NewProductModal.render();
-            modal.style.display = 'block';
-            modal.querySelector('#close-modal').onclick = function() {
-                modal.style.display = 'none';
-            }
-        })
+        if (componentId === 'admin-products') {
+            document.querySelector('#add-new-button').onclick = function() {
+                modal.innerHTML = NewProductModal.render();
+                modal.style.display = 'block';
+                modal.querySelector('#close-modal').onclick = function() {
+                    modal.style.display = 'none';
+                }
+                modal.querySelector('#new-product-form').onsubmit = async function (e) {
+                    e.preventDefault();
+                    modal.style.display = 'none';
+
+                    const name = modal.querySelector('#title').value;
+                    const author = modal.querySelector('#author').value;
+                    const price = modal.querySelector('#price').value;
+                    const availableQuantity = modal.querySelector('#availableQuantity').value;
+
+                    const response = await createProduct({
+                        name, author, price, availableQuantity, type: 'book'
+                    })
+
+                    console.log(response)
+                    alert(response.error ?
+                        response.error : `A new product was registered at the stock under id ${response}`)
+                }
+            };
+        }
     })
 }
+
 
 // TODO pass rendered content and a callback function
 const initializeModal = (component, callback) => {

@@ -23,10 +23,10 @@ const NewProductModal = {
                             <input type="number" id="price" step="0.1" min="0.1" placeholder="5" value="5" required> 
                         </div>
                         <div class="form-control">
-                            <label for="availability"> 
+                            <label for="availableQuantity"> 
                                 Availability:
                             </label>
-                            <input type="number" id="availability" min="1" value="1" required> 
+                            <input type="number" id="availableQuantity" min="1" value="1" required> 
                         </div>
                         <div class="form-actions">
                             <button type="submit"> Save product </button>                        

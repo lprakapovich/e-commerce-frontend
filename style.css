@@ -693,8 +693,6 @@ input[type="range"]::-ms-thumb {
 }
 
 
-/* New product form */
-
 #new-product-form {
     display: flex;
     flex-direction: column;

@@ -25,6 +25,16 @@ export const register = async ({username, email, password}) => {
     }
 }
 
+export const createProduct = async ({ name, author, price, availableQuantity, type}) => {
+    try {
+        const response = await axios.post(API_URL + '/products/books',
+            { name, author, price, availableQuantity, type });
+        return response.data;
+    } catch (err) {
+        return { error: err.response.data.message || err.message }
+    }
+}
+
 export const getProduct = async (id, type) => {
     return await axios.get(API_URL + '/products/' + type + `/${id}`);
 }
