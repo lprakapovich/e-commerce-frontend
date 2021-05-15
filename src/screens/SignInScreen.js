@@ -1,6 +1,10 @@
 import {login} from "../api";
 import {getUserInfo, setUserInfo} from "../localStorage";
 
+const redirect = () => {
+    document.location.hash = getUserInfo().role === 'Admin' ? '/admin' : '/';
+}
+
 const SignInScreen = {
     after_render: () => {
         document.getElementById('sign-in-form')
@@ -13,7 +17,7 @@ const SignInScreen = {
                     alert(data.error)
                 } else {
                     setUserInfo(data);
-                    document.location.hash = '/';
+                    redirect();
                 }
             });
         document.getElementById('sign-up-redirect')
@@ -24,7 +28,7 @@ const SignInScreen = {
     render: async () => {
 
         if (getUserInfo()) {
-            document.location.hash = '/';
+            redirect();
         }
 
         return `

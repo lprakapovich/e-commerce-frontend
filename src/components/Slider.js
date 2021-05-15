@@ -30,8 +30,8 @@ const Slider = {
                 values[0].value = min;
                 values[1].value = max;
 
-                localStorage.setItem('priceMin', JSON.stringify(min));
-                localStorage.setItem('priceMax', JSON.stringify(max));
+                localStorage.setItem('minPrice', JSON.stringify(min));
+                localStorage.setItem('maxPrice', JSON.stringify(max));
             }
         })
 
@@ -49,8 +49,8 @@ const Slider = {
                 ranges[0].value = min;
                 ranges[1].value = max;
 
-                localStorage.setItem('priceMin', JSON.stringify(min));
-                localStorage.setItem('priceMax', JSON.stringify(max));
+                localStorage.setItem('minPrice', JSON.stringify(min));
+                localStorage.setItem('maxPrice', JSON.stringify(max));
             }
         })
     }

@@ -1,6 +1,6 @@
 import {parseRequestUrl} from "../util.js";
 import {createOrder, getProduct} from "../api.js";
-import {getCartItems, getUserInfo, setCartItems} from "../localStorage.js";
+import {clearCartItems, getCartItems, getUserInfo, setCartItems} from "../localStorage.js";
 
 const addProductToCart = (item, forceUpdate = false) => {
     let cartItems = getCartItems();
@@ -67,8 +67,7 @@ const CartScreen = {
     render: async () => {
         const url = parseRequestUrl();
         if (url.id) {
-            const response = await getProduct(url.id, 'books');
-            const product = response.data;
+            const product = await getProduct(url.id, 'books');
 
             addProductToCart({
                 product: {

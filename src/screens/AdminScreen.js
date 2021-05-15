@@ -12,9 +12,11 @@ const preventNonAdminAccess = () => {
 }
 
 const getAdminOrdersView = async () => {
-    const orders = await getOrders();
-    return `<div id="orders-container"> 
-                ${orders.map(order =>
+    const response = await getOrders();
+    return response.error ?
+        `<div class="container"> No orders available </div>` :
+         `<div id="orders-container"> 
+                ${response.map(order =>
                     `<div class="order-item">
                         <div class="order-details">
                             <h3> Order №${order.id} </h3>
@@ -34,14 +36,14 @@ const getAdminOrdersView = async () => {
 }
 
 const getAdminProductsView = async () => {
-    const products = await getProducts('books');
-    console.log(products)
-    return `
+    const response = await getProducts('books');
+    return response.error ?
+        `<div class="container"> No products available </div>` : `
             <div id="admin-products-container"> 
-            <div class="">
+            <div>
                 <button id="add-new-button"> Add new product <i class="fa fa-plus"></i> </button> 
             </div>
-                ${products.map(product =>        
+                ${response.map(product =>        
                  `<div class="product-item">
                         <div class="product-details">
                             <h3> Product №${product.id} </h3>
@@ -80,18 +82,21 @@ const loadComponent = (componentId) => {
 
         const modal = document.querySelector('#admin-modal');
 
-        Array.from(document.querySelectorAll('.order-details-button')).forEach(button => {
-            button.onclick =  async function () {
-                const orderData = await getOrderById(button.id);
-                modal.innerHTML = OrderModal.render(orderData[0]);
-                modal.style.display = 'block';
-                modal.querySelector('#close-modal').onclick = function() {
-                    modal.style.display = 'none';
+        if (componentId === 'admin-orders') {
+            Array.from(document.querySelectorAll('.order-details-button')).forEach(button => {
+                button.onclick =  async function () {
+                    const orderData = await getOrderById(button.id);
+                    modal.innerHTML = OrderModal.render(orderData[0]);
+                    modal.style.display = 'block';
+                    modal.querySelector('#close-modal').onclick = function() {
+                        modal.style.display = 'none';
+                    }
                 }
-            }
-        })
+            })
+        }
 
         if (componentId === 'admin-products') {
+            console.log('admin products')
             document.querySelector('#add-new-button').onclick = function() {
                 modal.innerHTML = ProductModal.render();
                 modal.style.display = 'block';
@@ -111,6 +116,8 @@ const loadComponent = (componentId) => {
                     })
                     alert(response.error ?
                         response.error : `A new product was registered at the stock under id ${response}`)
+
+                    loadComponent('admin-products');
                 }
             };
 

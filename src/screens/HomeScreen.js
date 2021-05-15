@@ -51,7 +51,7 @@ const getParams = () => {
         name = document.getElementById('name').value;
     return {
         ...(minPrice) && { 'price[gte]' : minPrice },
-        ...(maxPrice) && { 'price[lge]' : maxPrice },
+        ...(maxPrice) && { 'price[lte]' : maxPrice },
         ...(author) && { 'author' : author },
         ...(name) && { 'name' : name },
     }
@@ -67,9 +67,10 @@ const HomeScreen = {
 
         document.getElementById('products-filter-form').addEventListener('submit', (e) => {
             e.preventDefault();
+            console.log(getParams())
             getProducts('books', getParams())
                 .then(response => {
-                document.getElementById('books-container').innerHTML = fetchProducts(response.data);
+                document.getElementById('books-container').innerHTML = fetchProducts(response);
             })
         })
     },

@@ -61,6 +61,7 @@ export const updateProduct = async ({id, name, author, price, availableQuantity,
 export const getProducts = async (type, filters) => {
     try {
         const products = await axios.get(API_URL + '/products/' + type, {data: {}, params: filters});
+        console.log(products)
         return products.data;
     } catch (err) {
         return { error: err.response.data.message || err.message }

@@ -12,6 +12,10 @@ export const getCartItems = () => {
     return cartItems ? JSON.parse(cartItems) : [];
 }
 
+export const clearCartItems = () => {
+    localStorage.removeItem('cartItems');
+}
+
 export const setCartItems = (cartItems) => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
 }

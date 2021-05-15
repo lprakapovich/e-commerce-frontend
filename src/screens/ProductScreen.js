@@ -11,11 +11,11 @@ const ProductScreen = {
     render: async () => {
         const request = parseRequestUrl();
         const response = await getProduct(request.id, 'books');
-        if (!response || response.status !== 200) {
-            return `<div> ${response.data.message} </div>`;
-        }
-        const product = response.data;
-        return `
+        console.log(response)
+        if (response.error) {
+            return `<div> ${response.error} </div>`;
+        } else {
+            return `
                <div class="product-view">
                     <div class="product-details image">
                        <img src="/images/sample.jpg" alt="book">
@@ -23,21 +23,22 @@ const ProductScreen = {
                     <div class="product-details data">
                         <div>
                             <a href="/#/book/1">
-                                ${product.name}
+                                ${response.name}
                             </a>
                         </div>
                    <div class="book-author">
-                       ${product.author} 
+                       ${response.author} 
                    </div>
                     <div class="book-availability">
-                       ${product.availableQuantity} 
+                       ${response.availableQuantity} 
                    </div>
                    <div class="book-price">
-                      ${product.price}
+                      ${response.price}
                    </div>
                   <button id="add-to-cart-button" type="submit"> Add to cart </button>
                </div>
            </div> `
+        }
     }
 }
 
