@@ -76,11 +76,13 @@ const HomeScreen = {
     },
 
     render: async () => {
-        const {data, status} = await getProducts('books');
-        if (!status || status !== 200) {
+        const response = await getProducts('books');
+        console.log(response)
+        if (response.error) {
             return `<div> Couldn't fetch the books </div>`;
-        } else {
-            setStorageProducts(data);
+        }
+         else {
+            setStorageProducts(response);
             return `
             <div class="products-container">
                 <form id="products-filter-form">
@@ -103,7 +105,7 @@ const HomeScreen = {
                     </div>
                 </form>
                <div id="products-list">
-                    ${fetchProducts(data)}
+                    ${fetchProducts(response)}
                </div>
             </div>
         `

@@ -370,7 +370,8 @@ footer {
 
 .form button,
 #products-filter-form button,
-.order-actions button {
+.order-actions button,
+.product-actions button {
     background-color: var(--content);
     display: block;
     color: white;
@@ -384,7 +385,8 @@ footer {
 
 .order-actions button,
 #products-filter-form button,
-.form button:hover {
+.form button:hover,
+#add-new-button{
     cursor: pointer;
 }
 
@@ -580,36 +582,73 @@ input[type="range"]::-ms-thumb {
 
 /* Admin orders */
 
+#admin-products-container,
 #orders-container {
     height: available;
-    /*display: flex;*/
 }
 
+#admin-products-container hr,
 #orders-container hr {
     border-top: 1px solid lightgray;
 }
 
-#orders-container .order-item {
+#orders-container .order-item,
+#admin-products-container .product-item {
     padding: 2rem;
     display: flex;
 }
 
-#orders-container .order-item .order-details {
-    flex: 4;
+#admin-products-container .product-details,
+#orders-container .order-details {
+    flex: 3;
 }
 
+#admin-products-container .product-details div {
 
-#orders-container .order-item .order-actions,
-#orders-container .order-item .order-total {
+}
+
+#admin-products-container .product-details div:last-child {
+    font-size: 1rem;
+    color: dimgrey;
+    margin-top: 1rem;
+}
+
+#admin-products-container .product-actions,
+#admin-products-container .product-availability,
+#admin-products-container .product-price,
+#orders-container .order-actions,
+#orders-container .order-total {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.order-actions button {
+.order-actions button,
+.product-actions button {
     width: fit-content;
     margin-top: 0;
+    font-size: 1rem;
+}
+
+.product-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+#add-new-button {
+    border: 1px solid white;
+    outline: none;
+    color: var(--content);
+    background-color: white;
+    padding: 1rem;
+    font-weight: bold;
+    margin: 0 1rem;
+}
+
+#add-new-button:hover {
+    border: 1px solid var(--content);
+    border-radius: 1rem;
 }
 
 /* Order details modal */
@@ -634,7 +673,8 @@ input[type="range"]::-ms-thumb {
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 50%;
+    width: fit-content;
+    max-width: 50%;
 }
 
 /* The Close Button */
@@ -650,4 +690,30 @@ input[type="range"]::-ms-thumb {
     color: #000;
     text-decoration: none;
     cursor: pointer;
+}
+
+
+/* New product form */
+
+#new-product-form {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+}
+
+#new-product-form .form-control input[type="text"] {
+    min-width: 20rem;
+}
+
+#new-product-form .form-control input[type="number"] {
+    max-width: 10rem;
+}
+
+#new-product-form .form-actions {
+    display: flex;
+    justify-content: center;
+}
+
+#new-product-form button {
+    width: fit-content;
 }

@@ -69,7 +69,6 @@ const CartScreen = {
         if (url.id) {
             const response = await getProduct(url.id, 'books');
             const product = response.data;
-            console.log(product)
 
             addProductToCart({
                 product: {

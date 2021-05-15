@@ -30,7 +30,12 @@ export const getProduct = async (id, type) => {
 }
 
 export const getProducts = async (type, filters) => {
-    return await axios.get(API_URL + '/products/' + type, {data: {}, params: filters});
+    try {
+        const products = await axios.get(API_URL + '/products/' + type, {data: {}, params: filters});
+        return products.data;
+    } catch (err) {
+        return { error: err.response.data.message || err.message }
+    }
 }
 
 export const createOrder = async (order) => {

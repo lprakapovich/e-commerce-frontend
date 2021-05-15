@@ -1,7 +1,8 @@
 import {getUserInfo} from "../localStorage";
-import {getOrderById, getOrders} from "../api";
+import {getOrderById, getOrders, getProducts, login} from "../api";
 import {calculateOrderTotal} from "../util";
 import OrderModal from "../components/OrderModal";
+import NewProductModal from "../components/NewProductModal";
 
 const preventNonAdminAccess = () => {
     const {role} = getUserInfo();
@@ -30,31 +31,58 @@ const getAdminOrdersView = async () => {
                 <hr> 
             `)
         .join('\n')} </div>`;
-   }
+}
 
 const getAdminProductsView = async () => {
-    return `<div> admin products case</div>`;
+    const products = await getProducts('books');
+    console.log(products)
+    return `
+            <div id="admin-products-container"> 
+            <div class="">
+                <button id="add-new-button"> Add new product <i class="fa fa-plus"></i> </button> 
+            </div>
+                      
+                ${products.map(product =>        
+                 `<div class="product-item">
+                        <div class="product-details">
+                            <h3> Product №${product.id} </h3>
+                            <div> ${product.name} </div>
+                            <div> ${product.author} </div>
+                        </div>
+                         <div class="product-price">
+                            <div> Price: ${product.price}$ </div>
+                        </div>
+                        <div class="product-availability">
+                            <div> At stock:  ${product.availableQuantity}</div>
+                        </div>
+                       <div class="product-actions">
+                            <button class="edit-button" id="${product.id}"> Edit </button>
+                       </div>
+                    </div>
+                <hr> 
+            `)
+        .join('\n')} </div>`;
 }
 
 const loadContent = async (selectedMenuItemId) => {
-    let html = `<div> No content </div>`
     switch (selectedMenuItemId) {
         case 'admin-orders':
             return getAdminOrdersView();
         case 'admin-products':
             return getAdminProductsView();
+        default:
+            return `<div> No content </div>`
     }
-    return html;
 }
 
 const loadComponent = (componentId) => {
     loadContent(componentId).then(renderedComponent => {
         document.querySelector('#admin-navigation-content').innerHTML = renderedComponent;
-        const modal = document.querySelector('#myModal');
+        const modal = document.querySelector('#admin-modal');
+
         Array.from(document.querySelectorAll('.order-details-button')).forEach(button => {
             button.onclick =  async function () {
                 const orderData = await getOrderById(button.id);
-                console.log(orderData[0])
                 modal.innerHTML = OrderModal.render(orderData[0]);
                 modal.style.display = 'block';
                 modal.querySelector('#close-modal').onclick = function() {
@@ -62,8 +90,21 @@ const loadComponent = (componentId) => {
                 }
             }
         })
+
+        document.getElementById('add-new-button')?.addEventListener('click', () => {
+            modal.innerHTML = NewProductModal.render();
+            modal.style.display = 'block';
+            modal.querySelector('#close-modal').onclick = function() {
+                modal.style.display = 'none';
+            }
+        })
     })
 }
+
+// TODO pass rendered content and a callback function
+const initializeModal = (component, callback) => {
+}
+
 
 const AdminScreen = {
     render: async () => {
@@ -74,7 +115,7 @@ const AdminScreen = {
                     </nav>
                     <div id="admin-navigation-content"> 
                     </div>  
-                    <div id="myModal" class="modal">
+                    <div id="admin-modal" class="modal">
                     </div>
                 </div>`
     },
@@ -83,8 +124,7 @@ const AdminScreen = {
         preventNonAdminAccess();
 
         loadComponent('admin-orders');
-
-        let menuItems = document.getElementsByClassName('admin-navigation-item');
+        const menuItems = document.getElementsByClassName('admin-navigation-item');
         Array.from(menuItems).forEach(item => {
             item.addEventListener('click', () => {
                 const selectedMenuItemId = item.id;
