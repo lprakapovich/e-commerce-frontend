@@ -1,4 +1,4 @@
-const NewProductModal = {
+const ProductModal = {
     render: (product) => {
         console.log(product)
         return `<div class="modal-content">
@@ -41,4 +41,4 @@ const NewProductModal = {
     }
 }
 
-export default NewProductModal;
+export default ProductModal;

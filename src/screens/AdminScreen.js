@@ -2,7 +2,7 @@ import {getUserInfo} from "../localStorage";
 import {createProduct, getOrderById, getOrders, getProduct, getProducts, login, updateProduct} from "../api";
 import {calculateOrderTotal} from "../util";
 import OrderModal from "../components/OrderModal";
-import ProductModal from "../components/NewProductModal";
+import ProductModal from "../components/ProductModal";
 
 const preventNonAdminAccess = () => {
     const {role} = getUserInfo();
