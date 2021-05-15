@@ -70,6 +70,7 @@ const Header = {
 
         if (!getUserInfo() || getUserInfo().role !== 'Customer') {
             hide(document.getElementById('home'));
+            hide(document.getElementById('cart'));
         }
 
         if (!getUserInfo()) {
