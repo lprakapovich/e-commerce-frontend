@@ -23,7 +23,7 @@ const getCartTotal = (cart) => {
     return `<div> 
                  Subtotal (${cart.orderedItems.reduce((a, c) => a + c.orderedQuantity, 0)} items) :
                           ${cart.orderedItems.reduce((a, c) => a + c.product.price * c.orderedQuantity, 0)} 
-           </div>
+            </div>
            <button id="checkout-button"> Proceed to checkout </button> `
 }
 
@@ -85,6 +85,7 @@ const CartScreen = {
     render: async () => {
         const header = { username: getStorageUserInfo().email, password: getStorageUserInfo().password}
         const cart = await getUserCart(getStorageUserInfo().email, header);
+
         if (!cart || cart.orderedItems.length === 0 ) {
             return `<div class="container"> Cart is empty. <a class="color-link" href="#"> Go shopping! </a> </div>`
         } else {
@@ -96,6 +97,7 @@ const CartScreen = {
                                 <h3> Shopping Cart </h3>
                                 <h3> Price </h3>
                             </li>
+                            
                             ${cart.orderedItems.map(item => `
                             <li> 
                                 <div class="cart-item-container">

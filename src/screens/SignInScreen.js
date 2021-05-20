@@ -16,6 +16,7 @@ const SignInScreen = {
                 if (data.error) {
                     alert(data.error)
                 } else {
+                    console.log(data)
                     setStorageUserInfo(data);
                     redirect();
                 }
@@ -26,7 +27,6 @@ const SignInScreen = {
         })
     },
     render: async () => {
-
         if (getStorageUserInfo()) {
             redirect();
         }

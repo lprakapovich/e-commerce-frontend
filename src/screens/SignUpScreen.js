@@ -5,14 +5,17 @@ const SignUpScreen = {
         document.getElementById('sign-in-redirect').addEventListener('click', () => {
             location.hash = '/sign-in';
         })
-        document.getElementById('sign-up-form').addEventListener('submit', () => {
-            const response = register(
+        document.getElementById('sign-up-form').addEventListener('submit', async() => {
+            const response = await register(
                 {
-                    username: document.getElementById('username').value,
+                    name: document.getElementById('username').value,
                     email: document.getElementById('email').value,
                     password: document.getElementById('password').value,
+                    role: 'Customer'
                 }
             )
+            console.log(response)
+            location.hash = '/';
         })
     },
     render: async () => {
@@ -54,7 +57,7 @@ const SignUpScreen = {
                         <label for="confirmedPassword">
                             Confirm password
                         </label>
-                        <input type="text" placeholder="Confirm password" id="confirmedPassword" required>
+                        <input type="password" placeholder="Confirm password" id="confirmedPassword" required>
                         <i class="fa fa-check-circle"></i>
                         <i class="fa fa-exclamation-circle"></i>
                         <small>Error message</small>
