@@ -26,10 +26,17 @@ export const register = async ({username, email, password}) => {
     }
 }
 
-export const createProduct = async ({ name, author, price, availableQuantity, type}) => {
+export const createProduct = async ({ name, author, price, availableQuantity, type, genre}) => {
+    const {username, password} = getBasicAuthHeader();
     try {
         const response = await axios.post(API_URL + '/products/books',
-            { name, author, price, availableQuantity, type });
+            { name, author, price, availableQuantity, type, genre },
+            {
+                    auth : {
+                        username,
+                        password
+                    }
+            });
         return response.data;
     } catch (err) {
         return { error: err.response.data.message || err.message }
@@ -49,10 +56,16 @@ export const getProduct = async (id, type) => {
     }
 }
 
-export const updateProduct = async ({id, name, author, price, availableQuantity, type}) => {
+export const updateProduct = async ({id, name, author, price, availableQuantity, type, genre}) => {
+    const {username, password} = getBasicAuthHeader();
     try {
         const response = await axios.put(API_URL + '/products/books',
-            { id, name, author, price, availableQuantity, type });
+            { id, name, author, price, availableQuantity, type, genre },
+            {
+                auth: {
+                    username, password
+                }
+            });
         return response.data;
     } catch (err) {
         return { error: err.response.data.message || err.message }
@@ -69,7 +82,9 @@ export const getProducts = async (type, filters) => {
 }
 
 export const createOrder = async (order) => {
-   try {
+    const {username, password} = getBasicAuthHeader();
+
+    try {
        const response = await axios.post(API_URL + '/orders',
            {
                issuer: order.issuer,
@@ -78,8 +93,8 @@ export const createOrder = async (order) => {
            },
            {
                auth: {
-                   username: 'user',
-                   password: 'user'
+                   username,
+                   password
                }
            });
        return response.data;
@@ -89,13 +104,14 @@ export const createOrder = async (order) => {
 }
 
 export const getOrders = async () => {
-
+    const {username, password} = getBasicAuthHeader();
     try {
-        const response = await axios.get(API_URL + "/orders", {
+        const response = await axios.get(API_URL + "/orders/all", {
             auth: {
-                username: 'user',
-                password: 'user'
+                username,
+                password
             }});
+        console.log(response.data)
         return response.data;
     } catch (err) {
         return { error: err.response.data.message || err.message }
@@ -104,7 +120,12 @@ export const getOrders = async () => {
 
 export const getUserCart = async (issuer, {username, password}) => {
     try {
-        const response = await axios.get(API_URL + "/orders/cart", {auth: {username, password}, params : {issuer}})
+        const response = await axios.get(API_URL + "/orders/cart",
+            {auth: {username, password},
+            params : {
+            issuer,
+            status: 'Cart'
+        }})
         return response.data;
     } catch (err) {
         return {error: err.response.message || err.message }
@@ -112,11 +133,13 @@ export const getUserCart = async (issuer, {username, password}) => {
 }
 
 export const getOrder = async (id) => {
+    const {username, password} = getBasicAuthHeader();
+
     try {
         const response = await axios.get(API_URL + "/orders/" + id, {
             auth: {
-                username: 'user',
-                password: 'user'
+                username,
+                password
             }
         })
         return response.data;
@@ -125,14 +148,15 @@ export const getOrder = async (id) => {
     }
 }
 
-export const updateOrder = async ({id, issuer, orderedItems, date, lastModifiedDate, status}) => {
+export const updateOrder = async ({id, issuer, orderedItems, status, shippingAddress}) => {
+    const {username, password} = getBasicAuthHeader();
     try {
-        const response = await axios.put(API_URL + "/orders", {
-            id, issuer, status, orderedItems
-        }, {
+        const response = await axios.put(API_URL + "/orders",
+            { id, issuer, status, orderedItems, shippingAddress},
+            {
             auth: {
-                username: 'user',
-                password: 'user'
+                username,
+                password
             }
         })
         return response.data;
@@ -142,14 +166,24 @@ export const updateOrder = async ({id, issuer, orderedItems, date, lastModifiedD
 }
 
 export const deleteOrder = async (id) => {
+    const {username, password} = getBasicAuthHeader();
+
     try {
         await axios.delete(API_URL + "/orders/" + id, {
             auth: {
-                username: 'user',
-                password: 'user'
+                username,
+                password
             }
         })
     } catch (err) {
         return {error: err.response.message || err.message }
+    }
+}
+
+// TODO replace with interceptor
+export const getBasicAuthHeader = () => {
+    return {
+        username: getStorageUserInfo().email,
+        password: getStorageUserInfo().password
     }
 }

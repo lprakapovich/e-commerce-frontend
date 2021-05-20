@@ -243,7 +243,11 @@ footer {
     width: 100%;
 }
 
-.cart-total {
+.cart-list-container {
+    list-style: none;
+}
+
+#cart-total {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -287,6 +291,10 @@ footer {
 
 #checkout-button {
     font-size: 1rem;
+}
+
+#address-modal {
+    /*display: none;*/
 }
 
 /* SignIn, SignUp */
@@ -631,10 +639,6 @@ input[type="range"]::-ms-thumb {
     flex: 3;
 }
 
-#admin-products-container .product-details div {
-
-}
-
 #admin-products-container .product-details div:last-child {
     font-size: 1rem;
     color: dimgrey;
@@ -744,3 +748,9 @@ input[type="range"]::-ms-thumb {
     width: fit-content;
 }
 
+
+/* Genre selector */
+
+#genre-selector select  {
+    padding: 0 1rem;
+}

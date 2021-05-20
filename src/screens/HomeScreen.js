@@ -47,8 +47,8 @@ const getProductList = (response) => {
 }
 
 const getParams = () => {
-    const minPrice = localStorage.getItem('minPrice'),
-        maxPrice = localStorage.getItem('maxPrice'),
+    const minPrice = document.getElementById('min-price').value,
+        maxPrice = document.getElementById('max-price').value,
         name = document.getElementById('name').value,
         author = document.getElementById('author').value,
         genre = document.getElementById("genre").value;

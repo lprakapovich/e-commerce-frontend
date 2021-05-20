@@ -42,7 +42,7 @@ const SignInScreen = {
                         <label for="email">
                             Email
                         </label>
-                        <input type="text" placeholder="example@gmail.com" id="email">
+                        <input type="text" placeholder="example@gmail.com" id="email" required>
                         <i class="fa fa-check-circle"></i>
                         <i class="fa fa-exclamation-circle"></i>
                         <small>Error message</small>
@@ -51,7 +51,7 @@ const SignInScreen = {
                         <label for="password">
                             Password
                         </label>
-                    <input type="password" placeholder="Password" id="password">
+                    <input type="password" placeholder="Password" id="password" required>
                     <i class="fa fa-check-circle"></i>
                     <i class="fa fa-exclamation-circle"></i>
                     <small>Error message</small>

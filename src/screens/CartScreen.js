@@ -1,5 +1,6 @@
 import {deleteOrder, getUserCart, updateOrder} from "../api.js";
 import {clearStorageCart, getStorageCart, getStorageUserInfo, setStorageCart} from "../localStorage.js";
+import ShippingAddressModal from "../components/ShippingAddressModal";
 
 const removeFromCart = async (id) => {
     const cart = getStorageCart();
@@ -13,6 +14,19 @@ const removeFromCart = async (id) => {
     }
 }
 
+const updateCartTotal = () => {
+    document.getElementById("cart-total").innerHTML = getCartTotal(getStorageCart());
+}
+
+const getCartTotal = (cart) => {
+    console.log(cart)
+    return `<div> 
+                 Subtotal (${cart.orderedItems.reduce((a, c) => a + c.orderedQuantity, 0)} items) :
+                          ${cart.orderedItems.reduce((a, c) => a + c.product.price * c.orderedQuantity, 0)} 
+           </div>
+           <button id="checkout-button"> Proceed to checkout </button> `
+}
+
 const CartScreen = {
     after_render: () => {
         Array.from(document.getElementsByClassName("quantity-select")).forEach(selectControl => {
@@ -20,8 +34,8 @@ const CartScreen = {
                     const cart = getStorageCart();
                     cart.orderedItems.find(item => item.product.id === selectControl.id).orderedQuantity = Number(e.target.value);
                     updateOrder(cart).then(updatedOrder => {
-                        console.log(updatedOrder)
-                        alert('Cart updated!')
+                        setStorageCart(updatedOrder)
+                        updateCartTotal();
                     })
             });
         });
@@ -33,16 +47,38 @@ const CartScreen = {
             })
         })
 
+        updateCartTotal();
+
         document.getElementById('checkout-button')?.addEventListener('click', async () => {
-            const order = getStorageCart();
-            const response = await updateOrder({...order, orderState: 'Processed'} );
-            if (response.error) {
-                alert(response.error)
-            } else {
-                alert(`Order ${response.id} will be processed in the nearest time. Thank you!`)
-                document.location.hash = '/cart';
-                clearStorageCart();
+
+            const modal = document.getElementById("address-modal");
+            modal.innerHTML = ShippingAddressModal.render();
+            modal.style.display = 'block';
+            modal.querySelector('#close-modal').onclick = function() {
+                modal.style.display = 'none';
             }
+            modal.querySelector('#address-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const country = modal.querySelector('#country').value;
+                const city = modal.querySelector('#city').value;
+                const street = modal.querySelector('#street').value;
+                const zip = modal.querySelector('#zip').value;
+
+                const order = getStorageCart();
+                const response = await updateOrder(
+                    {...order,
+                        status: 'Processed',
+                        shippingAddress: { country, city, street, zip}});
+                if (response.error) {
+                    alert(response.error)
+                } else {
+                    alert(`Order ${response.id} will be processed in the nearest time. Thank you!`)
+                    document.location.hash = '/cart';
+                    clearStorageCart();
+                    modal.style.display = 'none';
+                }
+            })
         })
     },
 
@@ -69,7 +105,7 @@ const CartScreen = {
                                     <div class="cart-item-details">
                                         <h3> ${item.product.name} </h3>
                                     <div>
-                                        Qty: 
+                                        Ordered quantity: 
                                         <select class="quantity-select" id="${item.product.id}"> 
                                             ${[...Array(item.product.availableQuantity).keys()].map(key => item.orderedQuantity === key + 1 ?
                                                 `<option selected value="${key + 1}">${key + 1} </option>` : 
@@ -85,14 +121,8 @@ const CartScreen = {
                             </li>`).join('\n')}
                         </ul>
                     </div>
-                    
-                    <div class="cart-total container">
-                        <div> 
-                            Subtotal (${cart.orderedItems.reduce((a, c) => a + c.orderedQuantity, 0)} items) :
-                               ${cart.orderedItems.reduce((a, c) => a + c.product.price * c.orderedQuantity, 0)} 
-                        </div>
-                        <button id="checkout-button"> Proceed to checkout </button>
-                    </div>     
+                    <div class="container" id="cart-total"></div>  
+                    <div id="address-modal" class="modal"> </div>   
                </div> 
            `
         }

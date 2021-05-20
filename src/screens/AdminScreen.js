@@ -13,6 +13,7 @@ const preventNonAdminAccess = () => {
 
 const getAdminOrdersView = async () => {
     const response = await getOrders();
+    console.log(response)
     return response.error ?
         `<div class="container"> No orders available </div>` :
          `<div id="orders-container"> 
@@ -22,7 +23,7 @@ const getAdminOrdersView = async () => {
                             <h3> Order №${order.id} </h3>
                             <div> Issued by ${order.issuer.name} </div>
                             <div> Number of items ordered: ${order.orderedItems.length} </div>
-                            <p> <strong>Status: ${order.orderState} </strong> </p>
+                            <p> <strong>Status: ${order.status} </strong> </p>
                         </div>
                         <div class="order-total">
                             Total: $${calculateOrderTotal(order.orderedItems)}
@@ -39,7 +40,10 @@ const getAdminOrdersView = async () => {
 const getAdminProductsView = async () => {
     const response = await getProducts('books');
     return response.error ?
-        `<div class="container"> No products available </div>` : `
+        `<div class="container"> No products available </div>
+            <div>
+              <button id="add-new-button"> Add new product <i class="fa fa-plus"></i> </button> 
+            </div>` : `
             <div id="admin-products-container"> 
             <div>
                 <button id="add-new-button"> Add new product <i class="fa fa-plus"></i> </button> 
@@ -57,6 +61,7 @@ const getAdminProductsView = async () => {
                         <div class="product-availability">
                             <div> At stock:  ${product.availableQuantity}</div>
                         </div>
+                        
                        <div class="product-actions">
                             <button class="edit-button" id="${product.id}"> Edit </button>
                        </div>
@@ -87,7 +92,7 @@ const loadComponent = (componentId) => {
             Array.from(document.querySelectorAll('.order-details-button')).forEach(button => {
                 button.onclick =  async function () {
                     const orderData = await getOrder(button.id);
-                    modal.innerHTML = OrderModal.render(orderData[0]);
+                    modal.innerHTML = OrderModal.render(orderData);
                     modal.style.display = 'block';
                     modal.querySelector('#close-modal').onclick = function() {
                         modal.style.display = 'none';
@@ -97,15 +102,14 @@ const loadComponent = (componentId) => {
         }
 
         if (componentId === 'admin-products') {
-            console.log('admin products')
             document.querySelector('#add-new-button').onclick = function() {
                 modal.innerHTML = ProductModal.render();
+                ProductModal.after_render();
                 modal.style.display = 'block';
                 modal.querySelector('#close-modal').onclick = function() {
                     modal.style.display = 'none';
                 }
                 modal.querySelector('#new-product-form').onsubmit = async function (e) {
-                    // create new product
                     e.preventDefault();
                     modal.style.display = 'none';
                     const response = await createProduct({
@@ -113,11 +117,11 @@ const loadComponent = (componentId) => {
                         author: modal.querySelector('#author').value,
                         price: modal.querySelector('#price').value,
                         availableQuantity: modal.querySelector('#availableQuantity').value,
+                        genre: modal.querySelector('#genre').value,
                         type: 'book'
                     })
                     alert(response.error ?
                         response.error : `A new product was registered at the stock under id ${response}`)
-
                     loadComponent('admin-products');
                 }
             };
@@ -126,13 +130,13 @@ const loadComponent = (componentId) => {
                 button.onclick = async function () {
                     const product = await getProduct(button.id, 'books');
                     modal.innerHTML = ProductModal.render(product);
+                    ProductModal.after_render(product);
                     modal.style.display = 'block';
                     modal.querySelector('#close-modal').onclick = function() {
                         modal.style.display = 'none';
                     }
                     modal.querySelector('#modal-header').innerText = 'Edit an existing product';
                     modal.querySelector('#new-product-form').onsubmit = async function (e) {
-                        // modify product
                         e.preventDefault();
                         modal.style.display = 'none';
                         const response = await updateProduct({
@@ -140,6 +144,7 @@ const loadComponent = (componentId) => {
                             name : modal.querySelector('#title').value,
                             author: modal.querySelector('#author').value,
                             price: modal.querySelector('#price').value,
+                            genre: modal.querySelector('#genre').value,
                             availableQuantity: modal.querySelector('#availableQuantity').value,
                             type: 'book'
                         })
@@ -157,9 +162,6 @@ const loadComponent = (componentId) => {
     })
 }
 
-// TODO pass rendered content and a callback function
-const initializeModal = (component, callback) => {
-}
 
 const AdminScreen = {
     render: async () => {

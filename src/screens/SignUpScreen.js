@@ -1,16 +1,11 @@
 import {register} from "../api";
 
-// TODO
-const validateForm = () => {
-}
-
 const SignUpScreen = {
     after_render: () => {
         document.getElementById('sign-in-redirect').addEventListener('click', () => {
             location.hash = '/sign-in';
         })
         document.getElementById('sign-up-form').addEventListener('submit', () => {
-            validateForm();
             const response = register(
                 {
                     username: document.getElementById('username').value,
@@ -32,7 +27,7 @@ const SignUpScreen = {
                         <label>
                             Username
                         </label>
-                        <input type="text" placeholder="Username" id="username">
+                        <input type="text" placeholder="Username" id="username" required>
                         <i class="fa fa-check-circle"></i>
                         <i class="fa fa-exclamation-circle"></i>
                         <small>Error message</small>
@@ -41,7 +36,7 @@ const SignUpScreen = {
                         <label for="email">
                             Email
                         </label>
-                        <input type="text" placeholder="example@gmail.com" id="email">
+                        <input type="text" placeholder="example@gmail.com" id="email" required>
                         <i class="fa fa-check-circle"></i>
                         <i class="fa fa-exclamation-circle"></i>
                         <small>Error message</small>
@@ -50,7 +45,7 @@ const SignUpScreen = {
                         <label for="password">
                             Password
                         </label>
-                        <input type="password" placeholder="Password" id="password">
+                        <input type="password" placeholder="Password" id="password" required>
                         <i class="fa fa-check-circle"></i>
                         <i class="fa fa-exclamation-circle"></i>
                         <small>Error message</small>
@@ -59,7 +54,7 @@ const SignUpScreen = {
                         <label for="confirmedPassword">
                             Confirm password
                         </label>
-                        <input type="text" placeholder="Confirm password" id="confirmedPassword">
+                        <input type="text" placeholder="Confirm password" id="confirmedPassword" required>
                         <i class="fa fa-check-circle"></i>
                         <i class="fa fa-exclamation-circle"></i>
                         <small>Error message</small>
