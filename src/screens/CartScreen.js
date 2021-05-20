@@ -1,100 +1,66 @@
-import {parseRequestUrl} from "../util.js";
-import {createOrder, getProduct} from "../api.js";
-import {clearCartItems, getCartItems, getUserInfo, setCartItems} from "../localStorage.js";
+import {deleteOrder, getUserCart, updateOrder} from "../api.js";
+import {clearStorageCart, getStorageCart, getStorageUserInfo, setStorageCart} from "../localStorage.js";
 
-const addProductToCart = (item, forceUpdate = false) => {
-    let cartItems = getCartItems();
-    const existingItem = cartItems.find(i => i.id === item.id);
-    if (existingItem) {
-        if (forceUpdate) {
-         cartItems.forEach(i => {
-             if (i.id === item.id) {
-                 i.orderedQuantity = item.orderedQuantity;
-             }
-         })
-        }
+const removeFromCart = async (id) => {
+    const cart = getStorageCart();
+    const orderedItems = cart.orderedItems.filter(item => item.product.id !== id);
+    if (orderedItems.length === 0) {
+        await deleteOrder(cart.id);
     } else {
-        cartItems = [...cartItems, item];
-    }
-
-    setCartItems(cartItems);
-    if (forceUpdate) {
-        location.reload();
-    }
-}
-
-const removeFromCart = (id) => {
-    setCartItems(getCartItems().filter(i => i.product.id !== id));
-
-    if (id === parseRequestUrl().id) {
-     document.location.hash = "/cart";
-    } else {
-        location.reload();
+        cart.orderedItems = orderedItems;
+        const updatedOrder = await updateOrder(cart);
+        console.log(updatedOrder)
     }
 }
 
 const CartScreen = {
     after_render: () => {
-        const selectControls = document.getElementsByClassName("quantity-select");
-        Array.from(selectControls).forEach(selectControl => {
-            selectControl.addEventListener('change', (e) => {
-                const item = getCartItems().find(i => i.id === selectControl.id);
-                addProductToCart({...item, orderedQuantity: Number(e.target.value)}, true)
+        Array.from(document.getElementsByClassName("quantity-select")).forEach(selectControl => {
+                selectControl.addEventListener('change', (e) => {
+                    const cart = getStorageCart();
+                    cart.orderedItems.find(item => item.product.id === selectControl.id).orderedQuantity = Number(e.target.value);
+                    updateOrder(cart).then(updatedOrder => {
+                        console.log(updatedOrder)
+                        alert('Cart updated!')
+                    })
             });
         });
-        const deleteButtons = document.getElementsByClassName("delete-button");
-        Array.from(deleteButtons).forEach(deleteButton => {
-            deleteButton.addEventListener('click', () => {
-                removeFromCart(deleteButton.id);
+        Array.from(document.getElementsByClassName("delete-button")).forEach(deleteButton => {
+            deleteButton.addEventListener('click',  () => {
+                removeFromCart(deleteButton.id).then(async () => {
+                    alert('Removed item from cart!');
+                });
             })
         })
 
-        document.getElementById('checkout-button').addEventListener('click', async () => {
-            const order = {
-                issuer: getUserInfo(),
-                orderState: 'Cart',
-                orderedProducts: getCartItems()
-            };
-
-            const response = await createOrder(order);
+        document.getElementById('checkout-button')?.addEventListener('click', async () => {
+            const order = getStorageCart();
+            const response = await updateOrder({...order, orderState: 'Processed'} );
             if (response.error) {
                 alert(response.error)
             } else {
-                alert(`Order ${response} will be processed in the nearest time. Thank you!`)
+                alert(`Order ${response.id} will be processed in the nearest time. Thank you!`)
+                document.location.hash = '/cart';
+                clearStorageCart();
             }
         })
     },
+
     render: async () => {
-        const url = parseRequestUrl();
-        if (url.id) {
-            const product = await getProduct(url.id, 'books');
-
-            addProductToCart({
-                product: {
-                    id: product.id,
-                    name: product.name,
-                    author: product.author,
-                    price: product.price,
-                    availableQuantity: product.availableQuantity,
-                    type: product.type
-                },
-                orderedQuantity: product.orderedQuantity ? product.orderedQuantity : 1
-            });
-        }
-
-        const cartItems = getCartItems();
-        return `
-               <div class="cart-container">
+        const header = { username: getStorageUserInfo().email, password: getStorageUserInfo().password}
+        const cart = await getUserCart(getStorageUserInfo().email, header);
+        if (!cart || cart.orderedItems.length === 0 ) {
+            return `<div class="container"> Cart is empty. <a class="color-link" href="#"> Go shopping! </a> </div>`
+        } else {
+            setStorageCart(cart);
+            return `<div class="cart-container">
                     <div class="cart-product-list">
                         <ul class="cart-list-container">
                             <li class="cart-container-header">
-                                <h3> Shopping Cart</h3>
-                                <h3>
-                                    Price
-                                </h3>
+                                <h3> Shopping Cart </h3>
+                                <h3> Price </h3>
                             </li>
-                            ${cartItems.length === 0 ? `<div> Cart is empty! <a href="#"> Go shopping.</a></div>` : cartItems.map(item =>
-                            `
+                            ${cart.orderedItems.map(item => `
                             <li> 
                                 <div class="cart-item-container">
                                     <div class="cart-item-image">
@@ -105,11 +71,9 @@ const CartScreen = {
                                     <div>
                                         Qty: 
                                         <select class="quantity-select" id="${item.product.id}"> 
-                                            ${
-                                                [...Array(item.product.availableQuantity).keys()].map(key => item.orderedQuantity === key + 1 ? 
-                                                    `<option selected value="${key + 1}">${key + 1} </option>` : 
-                                                    `<option value="${key + 1}">${key + 1} </option>`)
-                                            }
+                                            ${[...Array(item.product.availableQuantity).keys()].map(key => item.orderedQuantity === key + 1 ?
+                                                `<option selected value="${key + 1}">${key + 1} </option>` : 
+                                                `<option value="${key + 1}">${key + 1} </option>`)}
                                         </select>
                                         <button class="delete-button" id="${item.product.id}"> Delete </button>
                                     </div>
@@ -121,14 +85,17 @@ const CartScreen = {
                             </li>`).join('\n')}
                         </ul>
                     </div>
+                    
                     <div class="cart-total container">
                         <div> 
-                            Subtotal (${cartItems.reduce((a, c) => a + c.orderedQuantity, 0)} items) : ${cartItems.reduce((a, c) => a + c.product.price * c.orderedQuantity, 0)}
+                            Subtotal (${cart.orderedItems.reduce((a, c) => a + c.orderedQuantity, 0)} items) :
+                               ${cart.orderedItems.reduce((a, c) => a + c.product.price * c.orderedQuantity, 0)} 
                         </div>
                         <button id="checkout-button"> Proceed to checkout </button>
                     </div>     
                </div> 
-             `
+           `
+        }
     }
 }
 

@@ -29,6 +29,11 @@ hr {
 
 }
 
+a {
+    text-decoration: none;
+    color: black;
+}
+
 .container {
     padding: 1rem;
 }
@@ -50,6 +55,13 @@ hr {
     min-width: 20rem;
 }
 
+.color-link {
+    color: var(--content)
+}
+
+button .disabled {
+    background-color: dimgrey;
+}
 
 /* Main container */
 
@@ -198,21 +210,18 @@ footer {
     width: 100%;
 }
 
-.product-view .product-details {
-    margin: 2rem;
-    width: 100%;
+.book-genre {
+    color: var(--content);
 }
 
-.product-view .product-details .image a {
-    /*flex: 1;*/
+.product-details-image img {
+    max-height: 90%;
+}
+
+.product-details-image {
     display: flex;
-    justify-items: center;
-    justify-self: center;
     justify-content: center;
-}
-
-.product-view .product-details .data {
-    /*flex: 1;*/
+    margin: 2rem;
 }
 
 .submit-button {
@@ -236,7 +245,14 @@ footer {
 
 .cart-total {
     flex: 1;
-    background-color: #c44d38;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--light);
+    height: fit-content;
+    border-radius: 1rem;
+    margin: 1rem;
+
 }
 
 .cart-item-container, .cart-container-header {
@@ -267,6 +283,10 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+#checkout-button {
+    font-size: 1rem;
 }
 
 /* SignIn, SignUp */
@@ -369,24 +389,32 @@ footer {
 }
 
 .form button,
-#products-filter-form button,
 .order-actions button,
-.product-actions button {
+.product-actions button,
+#products-filter-form button,
+#add-to-cart-button,
+#checkout-button {
     background-color: var(--content);
     display: block;
     color: white;
     width: 100%;
     padding: 1rem;
-    font-size: 1.3rem;
+    font-size: 1rem;
     border-radius: 1rem;
     border: none;
     margin-top: 2rem;
 }
 
+#checkout-button {
+    width: fit-content;
+    margin: 1rem;
+}
+
 .order-actions button,
 #products-filter-form button,
 .form button:hover,
-#add-new-button{
+#add-new-button,
+#add-to-cart-button {
     cursor: pointer;
 }
 
@@ -715,3 +743,4 @@ input[type="range"]::-ms-thumb {
 #new-product-form button {
     width: fit-content;
 }
+

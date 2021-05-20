@@ -1,5 +1,6 @@
 import {API_URL} from "./config";
 import axios from "axios";
+import {getStorageUserInfo} from "./localStorage";
 
 export const login = async ({email, password}) => {
     try {
@@ -61,7 +62,6 @@ export const updateProduct = async ({id, name, author, price, availableQuantity,
 export const getProducts = async (type, filters) => {
     try {
         const products = await axios.get(API_URL + '/products/' + type, {data: {}, params: filters});
-        console.log(products)
         return products.data;
     } catch (err) {
         return { error: err.response.data.message || err.message }
@@ -74,7 +74,7 @@ export const createOrder = async (order) => {
            {
                issuer: order.issuer,
                orderState: order.orderState,
-               orderedItems: order.orderedProducts
+               orderedItems: order.orderedItems
            },
            {
                auth: {
@@ -89,6 +89,7 @@ export const createOrder = async (order) => {
 }
 
 export const getOrders = async () => {
+
     try {
         const response = await axios.get(API_URL + "/orders", {
             auth: {
@@ -101,18 +102,53 @@ export const getOrders = async () => {
     }
 }
 
-export const getOrderById = async (id) => {
+export const getUserCart = async (issuer, {username, password}) => {
     try {
-        const response = await axios.get(API_URL + "/orders", {
+        const response = await axios.get(API_URL + "/orders/cart", {auth: {username, password}, params : {issuer}})
+        return response.data;
+    } catch (err) {
+        return {error: err.response.message || err.message }
+    }
+}
+
+export const getOrder = async (id) => {
+    try {
+        const response = await axios.get(API_URL + "/orders/" + id, {
             auth: {
                 username: 'user',
                 password: 'user'
-            },
-            params: {
-                id
             }
         })
         return response.data;
+    } catch (err) {
+        return {error: err.response.message || err.message }
+    }
+}
+
+export const updateOrder = async ({id, issuer, orderedItems, date, lastModifiedDate, status}) => {
+    try {
+        const response = await axios.put(API_URL + "/orders", {
+            id, issuer, status, orderedItems
+        }, {
+            auth: {
+                username: 'user',
+                password: 'user'
+            }
+        })
+        return response.data;
+    } catch (err) {
+        return {error: err.response.message || err.message }
+    }
+}
+
+export const deleteOrder = async (id) => {
+    try {
+        await axios.delete(API_URL + "/orders/" + id, {
+            auth: {
+                username: 'user',
+                password: 'user'
+            }
+        })
     } catch (err) {
         return {error: err.response.message || err.message }
     }

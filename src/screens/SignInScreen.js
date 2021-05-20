@@ -1,8 +1,8 @@
 import {login} from "../api";
-import {getUserInfo, setUserInfo} from "../localStorage";
+import {getStorageUserInfo, setStorageUserInfo} from "../localStorage";
 
 const redirect = () => {
-    document.location.hash = getUserInfo().role === 'Admin' ? '/admin' : '/';
+    document.location.hash = getStorageUserInfo().role === 'Admin' ? '/admin' : '/';
 }
 
 const SignInScreen = {
@@ -16,7 +16,7 @@ const SignInScreen = {
                 if (data.error) {
                     alert(data.error)
                 } else {
-                    setUserInfo(data);
+                    setStorageUserInfo(data);
                     redirect();
                 }
             });
@@ -27,7 +27,7 @@ const SignInScreen = {
     },
     render: async () => {
 
-        if (getUserInfo()) {
+        if (getStorageUserInfo()) {
             redirect();
         }
 

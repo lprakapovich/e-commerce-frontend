@@ -1,9 +1,8 @@
-import {getUserInfo} from "../localStorage";
+import {getStorageUserInfo} from "../localStorage";
 
 const UserProfileScreen = {
-
     render: async () => {
-        const {name, email, password, role} = getUserInfo();
+        const {name, email, password, role} = getStorageUserInfo();
         return `
             <div class="user-profile-wrapper">
                 <div class="form-container">

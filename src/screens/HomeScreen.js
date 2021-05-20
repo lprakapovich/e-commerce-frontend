@@ -1,4 +1,5 @@
 import Slider from "../components/Slider";
+import GenreSelector from "../components/GenreSelector"
 import {getStorageProducts, setStorageProducts} from "../localStorage";
 import {getProducts} from "../api";
 
@@ -20,9 +21,10 @@ const setProductPriceRanges = (products) => {
     }
 }
 
-const fetchProducts = (products) => {
-    return ` <ul id="books-container">
-                    ${products.map(book => `
+const getProductList = (response) => {
+    return response.error ? `<div class="container"> ${response.error} </div>` :
+        ` <ul id="books-container">
+                     ${response.map(book => `
                         <li>
                             <div class="book">
                                 <a href="/#/product/${book.id}">
@@ -47,13 +49,16 @@ const fetchProducts = (products) => {
 const getParams = () => {
     const minPrice = localStorage.getItem('minPrice'),
         maxPrice = localStorage.getItem('maxPrice'),
+        name = document.getElementById('name').value,
         author = document.getElementById('author').value,
-        name = document.getElementById('name').value;
-    return {
+        genre = document.getElementById("genre").value;
+
+        return {
         ...(minPrice) && { 'price[gte]' : minPrice },
         ...(maxPrice) && { 'price[lte]' : maxPrice },
         ...(author) && { 'author' : author },
         ...(name) && { 'name' : name },
+        ...(genre) && {'genre' : genre}
     }
 }
 
@@ -62,17 +67,16 @@ const HomeScreen = {
         const products = getStorageProducts();
         let { priceMin, priceMax} = setProductPriceRanges(products)
 
-        document.getElementById('slider').innerHTML= Slider.render(priceMin, priceMax);
+        document.querySelector('#slider').innerHTML= Slider.render(priceMin, priceMax);
         Slider.after_render();
 
-        document.getElementById('products-filter-form').addEventListener('submit', (e) => {
+        document.querySelector('#products-filter-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            console.log(getParams())
             getProducts('books', getParams())
-                .then(response => {
-                document.getElementById('books-container').innerHTML = fetchProducts(response);
-            })
+                .then(response => document.querySelector('#books-container').innerHTML = getProductList(response))
         })
+
+        document.querySelector("#genre-selector").innerHTML = GenreSelector.render();
     },
 
     render: async () => {
@@ -100,11 +104,12 @@ const HomeScreen = {
                         </div>
                         <div id="slider"></div>
                         </div>
+                        <div id="genre-selector"> </div>
                         <button type="submit"> Find </button>
                     </div>
                 </form>
                <div id="products-list">
-                    ${fetchProducts(response)}
+                    ${getProductList(response)}
                </div>
             </div>
         `

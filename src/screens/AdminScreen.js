@@ -1,11 +1,11 @@
-import {getUserInfo} from "../localStorage";
-import {createProduct, getOrderById, getOrders, getProduct, getProducts, login, updateProduct} from "../api";
+import {getStorageUserInfo} from "../localStorage";
+import {createProduct, getOrder, getOrders, getProduct, getProducts, login, updateProduct} from "../api";
 import {calculateOrderTotal} from "../util";
 import OrderModal from "../components/OrderModal";
 import ProductModal from "../components/ProductModal";
 
 const preventNonAdminAccess = () => {
-    const {role} = getUserInfo();
+    const {role} = getStorageUserInfo();
     if (role !== 'Admin') {
         document.location.hash = '/sign-in';
     }
@@ -22,6 +22,7 @@ const getAdminOrdersView = async () => {
                             <h3> Order №${order.id} </h3>
                             <div> Issued by ${order.issuer.name} </div>
                             <div> Number of items ordered: ${order.orderedItems.length} </div>
+                            <p> <strong>Status: ${order.orderState} </strong> </p>
                         </div>
                         <div class="order-total">
                             Total: $${calculateOrderTotal(order.orderedItems)}
@@ -85,7 +86,7 @@ const loadComponent = (componentId) => {
         if (componentId === 'admin-orders') {
             Array.from(document.querySelectorAll('.order-details-button')).forEach(button => {
                 button.onclick =  async function () {
-                    const orderData = await getOrderById(button.id);
+                    const orderData = await getOrder(button.id);
                     modal.innerHTML = OrderModal.render(orderData[0]);
                     modal.style.display = 'block';
                     modal.querySelector('#close-modal').onclick = function() {

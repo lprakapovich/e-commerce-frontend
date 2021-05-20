@@ -1,4 +1,4 @@
-import {clearUserInfo, getUserInfo} from "../localStorage";
+import {clearStorageUserInfo, getStorageUserInfo} from "../localStorage";
 
 const Header = {
     render: async () => {
@@ -36,27 +36,24 @@ const Header = {
                     </div>
             </div>
             <hr> 
-<!--            <div id="header__navigation">-->
-<!--                <nav class="header__navigation">-->
-<!--                  <ul>-->
-<!--                        <li class="header__navigation__item"><a href="#/books">Books</a></li>-->
-<!--                        <li class="header__navigation__item"><a href="#/boardgames">Boardgames</a></li>-->
-<!--                        <li class="header__navigation__item"><a href="#/news">News</a></li>-->
-<!--                    </ul>-->
-<!--                </nav>-->
-<!--                <hr>-->
-<!--            </div>-->
 `;
     },
 
     after_render: () => {
+
+        const cart = document.querySelector("#cart");
+        const home = document.querySelector("#home");
+        const profile = document.querySelector('#profile');
+        const signOut = document.querySelector('#sign-out');
+        const signIn = document.querySelector('#sign-in');
+
 
         document.getElementById('sign-in').addEventListener('click', () => {
             document.location.hash = '/sign-in';
         })
 
         document.getElementById('sign-out').addEventListener('click', () => {
-            clearUserInfo();
+            clearStorageUserInfo();
             document.location.hash = '/sign-in';
         })
 
@@ -64,23 +61,22 @@ const Header = {
            element.style.display = 'none';
         }
 
-        if (!getUserInfo() || getUserInfo().role !== 'Admin') {
+        if (!getStorageUserInfo() || getStorageUserInfo().role !== 'Admin') {
             hide(document.getElementById('admin'));
         }
 
-        if (!getUserInfo() || getUserInfo().role !== 'Customer') {
+        if (!getStorageUserInfo() || getStorageUserInfo().role !== 'Customer') {
             hide(document.getElementById('home'));
             hide(document.getElementById('cart'));
         }
 
-        if (!getUserInfo()) {
-            console.log('should not show header')
+        if (!getStorageUserInfo()) {
             hide(document.getElementById('cart'));
             hide(document.getElementById('profile'));
             hide(document.getElementById('sign-out'));
         }
 
-        if (getUserInfo()) {
+        if (getStorageUserInfo()) {
             hide(document.getElementById('sign-in'));
         }
     }
