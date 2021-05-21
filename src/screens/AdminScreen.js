@@ -1,4 +1,4 @@
-import {getStorageUserInfo} from "../localStorage";
+import {getStorageOrders, getStorageProducts, getStorageUserInfo, setStorageOrders} from "../localStorage";
 import {createProduct, getOrder, getOrders, getProduct, getProducts, login, updateProduct} from "../api";
 import {calculateOrderTotal} from "../util";
 import OrderModal from "../components/OrderModal";
@@ -13,10 +13,12 @@ const preventNonAdminAccess = () => {
 
 const getAdminOrdersView = async () => {
     const response = await getOrders();
-    console.log(response)
-    return response.error ?
-        `<div class="container"> No orders available </div>` :
-         `<div id="orders-container"> 
+    if (response.error) {
+        return `<div class="container"> No orders available </div>`
+    } else {
+        setStorageOrders(response)
+        console.log(response)
+        return`<div id="orders-container"> 
                 ${response.map(order =>
                     `<div class="order-item">
                         <div class="order-details">
@@ -30,13 +32,16 @@ const getAdminOrdersView = async () => {
                         </div> 
                        <div class="order-actions">
                             <button class="order-details-button" id="${order.id}"> Details </button>
+                            <div id="${order.id}" class="icon container shipment-button">
+                                
+                            </div>
                        </div>
                     </div>
                 <hr> 
             `)
-        .join('\n')} </div>`;
+            .join('\n')} </div>`;
+    }
 }
-
 const getAdminProductsView = async () => {
     const response = await getProducts('books');
     return response.error ?

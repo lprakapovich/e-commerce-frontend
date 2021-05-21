@@ -45,11 +45,12 @@ export const createProduct = async ({ name, author, price, availableQuantity, ty
 }
 
 export const getProduct = async (id, type) => {
+    const {username, password} = getBasicAuthHeader();
     try {
         const response = await axios.get(API_URL + '/products/' + type + `/${id}`, {
             auth: {
-                username: 'admin',
-                password: 'password'
+                username,
+                password
             }});
         return response.data;
     } catch (err) {
@@ -84,12 +85,10 @@ export const getProducts = async (type, filters) => {
 
 export const createOrder = async (order) => {
     const {username, password} = getBasicAuthHeader();
-
     try {
        const response = await axios.post(API_URL + '/orders',
            {
                issuer: order.issuer,
-               orderState: order.orderState,
                orderedItems: order.orderedItems
            },
            {
@@ -112,7 +111,6 @@ export const getOrders = async () => {
                 username,
                 password
             }});
-        console.log(response.data)
         return response.data;
     } catch (err) {
         return { error: err.response.data.message || err.message }

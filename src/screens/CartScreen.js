@@ -10,12 +10,47 @@ const removeFromCart = async (id) => {
     } else {
         cart.orderedItems = orderedItems;
         const updatedOrder = await updateOrder(cart);
-        console.log(updatedOrder)
     }
 }
 
+
 const updateCartTotal = () => {
     document.getElementById("cart-total").innerHTML = getCartTotal(getStorageCart());
+    registerCheckoutListener();
+}
+
+const registerCheckoutListener = () => {
+    document.getElementById('checkout-button')?.addEventListener('click', async () => {
+
+        const modal = document.getElementById("address-modal");
+        modal.innerHTML = ShippingAddressModal.render();
+        modal.style.display = 'block';
+        modal.querySelector('#close-modal').onclick = function() {
+            modal.style.display = 'none';
+        }
+        modal.querySelector('#address-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const country = modal.querySelector('#country').value;
+            const city = modal.querySelector('#city').value;
+            const street = modal.querySelector('#street').value;
+            const zip = modal.querySelector('#zip').value;
+
+            const order = getStorageCart();
+            const response = await updateOrder(
+                {...order,
+                    status: 'Processed',
+                    shippingAddress: { country, city, street, zip}});
+            if (response.error) {
+                alert(response.error)
+            } else {
+                alert(`Order ${response.id} will be processed in the nearest time. Thank you!`)
+                document.location.hash = '/cart';
+                clearStorageCart();
+                modal.style.display = 'none';
+            }
+        })
+    })
 }
 
 const getCartTotal = (cart) => {
@@ -30,14 +65,18 @@ const getCartTotal = (cart) => {
 const CartScreen = {
     after_render: () => {
         Array.from(document.getElementsByClassName("quantity-select")).forEach(selectControl => {
-                selectControl.addEventListener('change', (e) => {
+                selectControl.addEventListener('change', async (e) => {
                     const cart = getStorageCart();
                     cart.orderedItems.find(item => item.product.id === selectControl.id).orderedQuantity = Number(e.target.value);
-                    updateOrder(cart).then(updatedOrder => {
-                        setStorageCart(updatedOrder)
+                    const response = await updateOrder(cart);
+                    console.log(response)
+                    if (response.error) {
+                        alert(response.error)
+                    } else {
+                        setStorageCart(response)
                         updateCartTotal();
-                    })
-            });
+                    }
+                })
         });
         Array.from(document.getElementsByClassName("delete-button")).forEach(deleteButton => {
             deleteButton.addEventListener('click',  () => {
@@ -46,46 +85,12 @@ const CartScreen = {
                 });
             })
         })
-
         updateCartTotal();
-
-        document.getElementById('checkout-button')?.addEventListener('click', async () => {
-
-            const modal = document.getElementById("address-modal");
-            modal.innerHTML = ShippingAddressModal.render();
-            modal.style.display = 'block';
-            modal.querySelector('#close-modal').onclick = function() {
-                modal.style.display = 'none';
-            }
-            modal.querySelector('#address-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-
-                const country = modal.querySelector('#country').value;
-                const city = modal.querySelector('#city').value;
-                const street = modal.querySelector('#street').value;
-                const zip = modal.querySelector('#zip').value;
-
-                const order = getStorageCart();
-                const response = await updateOrder(
-                    {...order,
-                        status: 'Processed',
-                        shippingAddress: { country, city, street, zip}});
-                if (response.error) {
-                    alert(response.error)
-                } else {
-                    alert(`Order ${response.id} will be processed in the nearest time. Thank you!`)
-                    document.location.hash = '/cart';
-                    clearStorageCart();
-                    modal.style.display = 'none';
-                }
-            })
-        })
     },
 
     render: async () => {
         const header = { username: getStorageUserInfo().email, password: getStorageUserInfo().password}
         const cart = await getUserCart(getStorageUserInfo().email, header);
-
         if (!cart || cart.orderedItems.length === 0 ) {
             return `<div class="container"> Cart is empty. <a class="color-link" href="#"> Go shopping! </a> </div>`
         } else {

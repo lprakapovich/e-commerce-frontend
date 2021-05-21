@@ -63,6 +63,10 @@ button .disabled {
     background-color: dimgrey;
 }
 
+.icon {
+    font-size: 2rem;
+}
+
 /* Main container */
 
 #main-wrapper {
@@ -447,13 +451,28 @@ footer {
 
 /* User profile */
 
-.user-profile-wrapper {
+#user-profile-form-container {
     height: fit-content;
     border: 1px solid black;
     border-radius: 1rem;
-    margin: 2rem 0;
+    margin: 2rem;
+    display: flex;
+    align-self: center;
 }
 
+.user-profile-wrapper {
+    display: flex;
+    width: 100%;
+}
+
+.user-profile-wrapper #orders-container {
+    width: 100%;
+}
+
+.orders-container-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
 /* Slider */
 
 .range-slider {

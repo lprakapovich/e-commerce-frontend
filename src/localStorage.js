@@ -50,3 +50,18 @@ export const getStorageProcessedProduct = () => {
     const processedProduct = localStorage.getItem('processedProduct');
     return processedProduct ? JSON.parse(processedProduct) : null;
 }
+
+export const setStorageOrders = (orders) => {
+    if (orders) {
+        localStorage.setItem('orders', JSON.stringify(orders));
+    }
+}
+
+export const getStorageOrders = () => {
+    const orders = localStorage.getItem('orders');
+    return orders ? JSON.parse(orders) : null;
+}
+
+export const clearStorageOrders = () => {
+    localStorage.removeItem('orders');
+}
