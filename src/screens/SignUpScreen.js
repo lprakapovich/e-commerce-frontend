@@ -1,9 +1,13 @@
 import {register} from "../api";
 
+const redirectTo = (target) => {
+    location.hash = target;
+}
+
 const SignUpScreen = {
     after_render: () => {
         document.getElementById('sign-in-redirect').addEventListener('click', () => {
-            location.hash = '/sign-in';
+            redirectTo('/sign-in');
         })
         document.getElementById('sign-up-form').addEventListener('submit', async() => {
             const response = await register(
@@ -14,8 +18,12 @@ const SignUpScreen = {
                     role: 'Customer'
                 }
             )
-            console.log(response)
-            location.hash = '/';
+            if (response.error) {
+                alert(response.error);
+            } else {
+                alert(`New account was created under ID ${response}, please sign in`);
+                redirectTo('/sign-in');
+            }
         })
     },
     render: async () => {

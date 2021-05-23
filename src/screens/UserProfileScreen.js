@@ -1,14 +1,12 @@
-import {getStorageUserInfo} from "../localStorage";
-import {getOrders} from "../api";
+import {getStorageUserInfo, setStorageUserInfo} from "../localStorage";
+import {getOrders, getUserInfo, updateUserInfo} from "../api";
 import {calculateOrderTotal} from "../util";
 
 const UserProfileScreen = {
     render: async () => {
         const {name, email, password, role} = getStorageUserInfo();
-        const orders = await getOrders();
         return `
             <div class="user-profile-wrapper container">
-           
                 <div class="form-container" id="user-profile-form-container">
                     <div class="header">
                         <h2> ${!role || role === 'Customer' ? 'Customer' : 'Admin'} data </h2>
@@ -45,7 +43,45 @@ const UserProfileScreen = {
                     </form>
                 </div>
             <div id="orders-container">
-                <div class="order-item orders-container-header"> My orders </div>
+            </div>
+        </div>
+    `
+    },
+    after_render: async () => {
+        const {id} = getStorageUserInfo();
+        const response = await getUserInfo(id);
+        if (response.error) {
+            alert(response.error)
+        } else {
+            if (response.role !== 'Admin') {
+                const orders = await getOrders();
+                if (!orders.error) {
+                    document.getElementById('orders-container').innerHTML = getOrderList(orders);
+                }
+            }
+        }
+
+        const form = document.getElementById('user-profile-form-container');
+        form.onsubmit = async function (e) {
+            e.preventDefault();
+            const name = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            if (name && email && password) {
+                const response = await updateUserInfo({id, name, email, password});
+                if (response.error) {
+                    alert(response.error)
+                } else {
+                    alert('Successfully updated user info')
+                    setStorageUserInfo(response)
+                }
+            }
+        }
+    }
+}
+
+const getOrderList = (orders) => {
+    return `<div class="order-item orders-container-header"> My orders </div>
                 ${orders.map(order => `
                     <div class="order-item">
                         <div class="order-details">
@@ -61,16 +97,7 @@ const UserProfileScreen = {
                        </div>
                     </div>
                 <hr>
-                `)}
-            </div>
-        </div>
-        
-    `
-    },
-    after_render: async () => {
-        const orders = await getOrders();
-        console.log(orders)
-    }
+                `).join('\n')}`
 }
 
 export default UserProfileScreen;

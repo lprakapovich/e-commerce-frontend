@@ -32,9 +32,6 @@ const getAdminOrdersView = async () => {
                         </div> 
                        <div class="order-actions">
                             <button class="order-details-button" id="${order.id}"> Details </button>
-                            <div id="${order.id}" class="icon container shipment-button">
-                                
-                            </div>
                        </div>
                     </div>
                 <hr> 
@@ -66,7 +63,6 @@ const getAdminProductsView = async () => {
                         <div class="product-availability">
                             <div> At stock:  ${product.availableQuantity}</div>
                         </div>
-                        
                        <div class="product-actions">
                             <button class="edit-button" id="${product.id}"> Edit </button>
                        </div>

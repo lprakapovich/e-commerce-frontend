@@ -309,7 +309,6 @@ footer {
     justify-content: center;
     align-items: center;
     background-color: #bfbfbf;
-
 }
 
 .form-container {
@@ -457,7 +456,6 @@ footer {
     border-radius: 1rem;
     margin: 2rem;
     display: flex;
-    align-self: center;
 }
 
 .user-profile-wrapper {

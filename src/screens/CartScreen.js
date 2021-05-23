@@ -15,48 +15,56 @@ const removeFromCart = async (id) => {
 
 
 const updateCartTotal = () => {
-    document.getElementById("cart-total").innerHTML = getCartTotal(getStorageCart());
-    registerCheckoutListener();
+    const total = document.getElementById("cart-total");
+    if (total) {
+        total.innerHTML = getCartTotal(getStorageCart());
+        registerCheckoutListener(total);
+    }
 }
 
-const registerCheckoutListener = () => {
-    document.getElementById('checkout-button')?.addEventListener('click', async () => {
-
-        const modal = document.getElementById("address-modal");
-        modal.innerHTML = ShippingAddressModal.render();
-        modal.style.display = 'block';
-        modal.querySelector('#close-modal').onclick = function() {
-            modal.style.display = 'none';
-        }
-        modal.querySelector('#address-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const country = modal.querySelector('#country').value;
-            const city = modal.querySelector('#city').value;
-            const street = modal.querySelector('#street').value;
-            const zip = modal.querySelector('#zip').value;
-
-            const order = getStorageCart();
-            const response = await updateOrder(
-                {...order,
-                    status: 'Processed',
-                    shippingAddress: { country, city, street, zip}});
-            if (response.error) {
-                alert(response.error)
-            } else {
-                alert(`Order ${response.id} will be processed in the nearest time. Thank you!`)
-                document.location.hash = '/cart';
-                clearStorageCart();
+const registerCheckoutListener = (total) => {
+    total.getElementById('checkout-button')?.addEventListener('click', async () => {
+        if (getStorageCart().orderedItems.find(item => item.product.availableQuantity === 0)) {
+            alert('Please remove all the unavailable products before you continue!')
+        } else {
+            const modal = document.getElementById("address-modal");
+            modal.innerHTML = ShippingAddressModal.render();
+            modal.style.display = 'block';
+            modal.querySelector('#close-modal').onclick = function() {
                 modal.style.display = 'none';
             }
-        })
+            modal.querySelector('#address-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const country = modal.querySelector('#country').value;
+                const city = modal.querySelector('#city').value;
+                const street = modal.querySelector('#street').value;
+                const zip = modal.querySelector('#zip').value;
+
+                const order = getStorageCart();
+                const response = await updateOrder(
+                    {...order,
+                        status: 'Processed',
+                        shippingAddress: { country, city, street, zip}});
+                if (response.error) {
+                    alert(response.error)
+                } else {
+                    alert(`Order ${response.id} will be processed in the nearest time. Thank you!`)
+                    document.location.hash = '/cart';
+                    clearStorageCart();
+                    modal.style.display = 'none';
+                }
+            })
+        }
     })
 }
 
 const getCartTotal = (cart) => {
     console.log(cart)
     return `<div> 
-                 Subtotal (${cart.orderedItems.reduce((a, c) => a + c.orderedQuantity, 0)} items) :
+                 Subtotal (${cart.orderedItems
+                            .filter(item => item.availableQuantity !== 0)
+                            .reduce((a, c) => {}, 0)} items) :
                           ${cart.orderedItems.reduce((a, c) => a + c.product.price * c.orderedQuantity, 0)} 
             </div>
            <button id="checkout-button"> Proceed to checkout </button> `
@@ -91,6 +99,7 @@ const CartScreen = {
     render: async () => {
         const header = { username: getStorageUserInfo().email, password: getStorageUserInfo().password}
         const cart = await getUserCart(getStorageUserInfo().email, header);
+        console.log(cart)
         if (!cart || cart.orderedItems.length === 0 ) {
             return `<div class="container"> Cart is empty. <a class="color-link" href="#"> Go shopping! </a> </div>`
         } else {
@@ -121,9 +130,9 @@ const CartScreen = {
                                         <button class="delete-button" id="${item.product.id}"> Delete </button>
                                     </div>
                                     </div>
-                                        <div class="cart-item-price">
-                                            $${item.product.price}
-                                        </div>
+                                        <h4 class="cart-item-price">
+                                            ${item.product.availableQuantity!==0 ? '$' + item.product.price : 'Unavailable'}
+                                        </h4>
                                     </div>
                             </li>`).join('\n')}
                         </ul>
