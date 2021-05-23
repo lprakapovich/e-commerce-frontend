@@ -1,6 +1,21 @@
 import {getStorageUserInfo, setStorageUserInfo} from "../localStorage";
-import {getOrders, getUserInfo, updateUserInfo} from "../api";
+import {getOrder, getOrders, getUserInfo, updateUserInfo} from "../api";
 import {calculateOrderTotal} from "../util";
+import OrderModal from "../components/OrderModal";
+
+const registerListeners = () => {
+    Array.from(document.getElementsByClassName('order-details-button')).forEach(button => {
+        button.addEventListener('click', async () => {
+            const modal = document.querySelector('#user-modal');
+            const orderData = await getOrder(button.id);
+            modal.innerHTML = OrderModal.render(orderData);
+            modal.style.display = 'block';
+            modal.querySelector('#close-modal').onclick = function() {
+                modal.style.display = 'none';
+            }
+        })
+    })
+}
 
 const UserProfileScreen = {
     render: async () => {
@@ -44,6 +59,8 @@ const UserProfileScreen = {
                 </div>
             <div id="orders-container">
             </div>
+            <div id="user-modal" class="modal">
+            </div>
         </div>
     `
     },
@@ -57,6 +74,7 @@ const UserProfileScreen = {
                 const orders = await getOrders();
                 if (!orders.error) {
                     document.getElementById('orders-container').innerHTML = getOrderList(orders);
+                    registerListeners();
                 }
             }
         }

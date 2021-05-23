@@ -13,17 +13,16 @@ const removeFromCart = async (id) => {
     }
 }
 
-
 const updateCartTotal = () => {
     const total = document.getElementById("cart-total");
     if (total) {
         total.innerHTML = getCartTotal(getStorageCart());
-        registerCheckoutListener(total);
+        registerCheckoutListener();
     }
 }
 
-const registerCheckoutListener = (total) => {
-    total.getElementById('checkout-button')?.addEventListener('click', async () => {
+const registerCheckoutListener = () => {
+    document.getElementById('checkout-button')?.addEventListener('click', async () => {
         if (getStorageCart().orderedItems.find(item => item.product.availableQuantity === 0)) {
             alert('Please remove all the unavailable products before you continue!')
         } else {
@@ -64,7 +63,7 @@ const getCartTotal = (cart) => {
     return `<div> 
                  Subtotal (${cart.orderedItems
                             .filter(item => item.availableQuantity !== 0)
-                            .reduce((a, c) => {}, 0)} items) :
+                            .reduce((a, c) => a + c.orderedQuantity, 0)} items) :
                           ${cart.orderedItems.reduce((a, c) => a + c.product.price * c.orderedQuantity, 0)} 
             </div>
            <button id="checkout-button"> Proceed to checkout </button> `

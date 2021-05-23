@@ -26,7 +26,8 @@ const OrderModal = {
                             <div class="product-price">
                                 <div> Price: ${item.product.price}$ </div>
                             </div>
-                            </div>`)}
+                            <h5> Ordered: ${item.orderedQuantity}</h5>
+                            </div>`).join('\n')}
                         </div>
                     </div>`;
     }
